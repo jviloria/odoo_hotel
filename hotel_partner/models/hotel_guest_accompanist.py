@@ -30,7 +30,7 @@ class HotelGuestAccompanist(models.Model):
 
     accompanist_id = fields.Many2one('res.partner', 
         string='Guest Accompanist')
-    guest_id = fields.Many2one('res.partner', 
-        string='Guest ID')
+    reservation_id = fields.Many2one('hotel.reservation', 
+        string='Reservation ID')
     date = fields.Date(string='Date', 
         help='Date')
