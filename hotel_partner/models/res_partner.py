@@ -35,3 +35,4 @@ class ResPartner(models.Model):
         ('MS','MENOR SIN IDENTIFICACION'),
         ('NU','NUMERO UNICO DE IDENTIFICACION'),
         ], string='Reference Type',required=True, default='CC')
+    ref = fields.Char('Internal Reference', select=1, required=True)
