@@ -31,6 +31,7 @@ Module for partner info adjusting.
     "category":"Hotel Management",
     "author":"John Viloria Amaris",
     "data":[
+        'views/res_partner_view.xml',
     ],
     "installable":True
  }
