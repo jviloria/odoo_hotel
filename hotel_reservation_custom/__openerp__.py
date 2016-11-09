@@ -31,6 +31,7 @@ Module for guest reservation adjusting.
     "category":"Hotel Management",
     "author":"John Viloria Amaris",
     "data":[
+        "views/hotel_reservation_view.xml",
     ],
     "installable":True
  }

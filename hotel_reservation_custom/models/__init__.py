@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#	 John W. Viloria Amaris <john.viloria.amaris@gmail.com>
+#    John W. Viloria Amaris <john.viloria.amaris@gmail.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,4 +19,4 @@
 #
 ##############################################################################
 
-import models
+import hotel_reservation

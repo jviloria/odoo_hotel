@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_hotel_reservation_form" model="ir.ui.view">
+            <field name="name">hotel.reservation.form</field>
+            <field name="model">hotel.reservation</field>
+            <field name="inherit_id" ref="hotel_reservation.view_hotel_reservation_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string='Guest Accompanist'>
+                        <field name='accompanist_ids'>
+                            <tree string="Accompanist" editable="bottom">
+                                <field name="accompanist_id"/>
+                            </tree>
+                            <form>
+                                <field name="accompanist_id"/>
+                            </form>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
