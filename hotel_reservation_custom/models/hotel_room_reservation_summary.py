@@ -19,5 +19,15 @@
 #
 ##############################################################################
 
-import hotel_reservation
-import hotel_room_reservation_summary
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from openerp import models, fields
+
+
+class RoomReservationSummary(models.Model):
+
+    _inherit = 'room.reservation.summary'
+
+    date_from = fields.Datetime('Date From', default=datetime.today())
+    date_to = fields.Datetime('Date To', default=datetime.today()
+                              + relativedelta(days=14))
