@@ -31,6 +31,7 @@ Module for Pos customization.
     "category":"Sale",
     "author":"John Viloria Amaris",
     "data":[
+        #"views/point_of_sale_view.xml",
     ],
     "installable":True
  }
