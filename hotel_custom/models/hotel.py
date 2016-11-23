@@ -43,8 +43,8 @@ class HotelFolio(models.Model):
         res = super(HotelFolio, self).default_get(fields)
         if self._context:
             keys = self._context.keys()
-            if 'date' in keys:
-                res.update({'check_in': self._context['date']})
+            if 'checkin_date' in keys:
+                res.update({'checkin_date': self._context['checkin_date']})
             if 'room_id' in keys:
                 _logger.critical("ROOM ID: %s"%self._context['room_id'])
                 roomid = self._context['room_id']
