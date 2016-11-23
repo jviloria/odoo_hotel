@@ -27,7 +27,7 @@ Hotel Reservation Customizations
 
 Module for guest reservation adjusting.
     """,
-    "depends":['hotel_partner'],
+    "depends":['hotel_partner','hotel_custom'],
     "category":"Hotel Management",
     "author":"John Viloria Amaris",
     "data":[

@@ -44,6 +44,7 @@ class HotelSelectorWizard(models.TransientModel):
     @api.multi
     def new_reservation(self):
         _logger.critical("NEW RESERVATION RAISED")
+        _logger.critical("ROOM ID: %s"%self.room_id)
         return {
                 'type': 'ir.actions.act_window',
                 'res_model': 'quick.room.reservation',
@@ -56,12 +57,16 @@ class HotelSelectorWizard(models.TransientModel):
     @api.multi
     def new_checkin(self):
         _logger.critical("NEW CHECKIN RAISED")
+        room_id = self.room_id.id
+        checkin_date = self.check_in
         return {
                 'type': 'ir.actions.act_window',
                 'res_model': 'hotel.folio',
                 'view_type': 'form',
                 'view_mode': 'form',
                 #'res_id': 'quick_room_reservation_form_view',
+                'context': {'room_id': room_id,
+                            'checkin_date': checkin_date},
                 'target': 'new',
             }
 
