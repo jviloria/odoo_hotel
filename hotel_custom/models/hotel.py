@@ -45,8 +45,20 @@ class HotelFolio(models.Model):
             keys = self._context.keys()
             if 'checkin_date' in keys:
                 res.update({'checkin_date': self._context['checkin_date']})
-            if 'room_id' in keys:
+            if 'room_id' in keys:   #Se crean datos de la habitacion
                 _logger.critical("ROOM ID: %s"%self._context['room_id'])
                 roomid = self._context['room_id']
-                res.update({'room_id': int(roomid)})
+                room = self.env['hotel.room'].search(
+                            [('id','=',roomid)])
+                if room:
+                    product = room.product_id
+                    product_uom = product.product_tmpl_id.uom_id.id
+                    _logger.critical('PRODUCT UOM:%s'%product_uom)
+                    res['room_lines'] = [(0,0,{
+                        'product_id':product.id,
+                        'product_uom':product_uom,
+                        'checkin_date':self._context['checkin_date'],
+                        'checkout_date':self._context['checkin_date'],
+                        'name':product.name,
+                        })]
         return res
