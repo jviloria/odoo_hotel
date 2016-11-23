@@ -19,10 +19,13 @@
 #
 ##############################################################################
 
+import logging
+
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from openerp import models, fields
+from openerp import api, models, fields
 
+_logger = logging.getLogger(__name__)
 
 class RoomReservationSummary(models.Model):
 
@@ -31,3 +34,81 @@ class RoomReservationSummary(models.Model):
     date_from = fields.Datetime('Date From', default=datetime.today())
     date_to = fields.Datetime('Date To', default=datetime.today()
                               + relativedelta(days=14))
+
+class HotelSelectorWizard(models.TransientModel):
+    _name = 'hotel.selector.wizard'
+
+    check_in = fields.Datetime('Date', required=True)
+    room_id = fields.Many2one('hotel.room', 'Room', required=True)
+
+    @api.multi
+    def new_reservation(self):
+        _logger.critical("NEW RESERVATION RAISED")
+        return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'quick.room.reservation',
+                'view_type': 'form',
+                'view_mode': 'form',
+                #'res_id': 'quick_room_reservation_form_view',
+                'target': 'new',
+            }
+
+    @api.multi
+    def new_checkin(self):
+        _logger.critical("NEW CHECKIN RAISED")
+        return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'hotel.folio',
+                'view_type': 'form',
+                'view_mode': 'form',
+                #'res_id': 'quick_room_reservation_form_view',
+                'target': 'new',
+            }
+
+    @api.model
+    def default_get(self, fields):
+        """
+        To get default values for the object.
+        @param self: The object pointer.
+        @param fields: List of fields for which we want default values
+        @return: A dictionary which of fields with values.
+        """
+        _logger.critical(self._context)
+        if self._context is None:
+            self._context = {}
+        res = super(HotelSelectorWizard, self).default_get(fields)
+        if self._context:
+            keys = self._context.keys()
+            if 'date' in keys:
+                res.update({'check_in': self._context['date']})
+            if 'room_id' in keys:
+                _logger.critical("ROOM ID: %s"%self._context['room_id'])
+                roomid = self._context['room_id']
+                res.update({'room_id': int(roomid)})
+        return res
+
+class QuickRoomReservation(models.TransientModel):
+    _inherit = 'quick.room.reservation'
+
+    @api.model
+    def default_get(self, fields):
+        """
+        To get default values for the object.
+        @param self: The object pointer.
+        @param fields: List of fields for which we want default values
+        @return: A dictionary which of fields with values.
+        """
+        _logger.critical(self._context)
+        if self._context is None:
+            self._context = {}
+        res = super(QuickRoomReservation, self).default_get(fields)
+        if self._context:
+            keys = self._context.keys()
+            if 'date' in keys:
+                res.update({'check_in': self._context['date']})
+            if 'room_id' in keys:
+                _logger.critical("ROOM ID: %s"%self._context['room_id'])
+                roomid = self._context['room_id']
+                res.update({'room_id': int(roomid)})
+        return res
+

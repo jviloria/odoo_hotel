@@ -22,5 +22,26 @@
             </field>
         </record>
 
+         <!-- Selector Form view -->
+         <record id="hotel_selector_wizard_form_view" model="ir.ui.view">
+             <field name="name">hotel.selector.wizard.form</field>
+             <field name="model">hotel.selector.wizard</field>
+             <field name="arch" type="xml">
+                <form>
+                <header>
+                    <button string="Reservacion" name="new_reservation" type="object"/>
+                    <button string="Checkin" name="new_checkin" type="object"/>
+                    <button string="Bloquear" special="cancel" icon="gtk-cancel" />
+                </header>
+                    <sheet>
+                         <group colspan="4" col="4">
+                             <field name="room_id" />
+                             <field name="check_in"/>
+                         </group>
+                     </sheet>
+                </form>
+             </field>
+         </record>
+
     </data>
 </openerp>
