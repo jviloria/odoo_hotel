@@ -60,5 +60,6 @@ class HotelFolio(models.Model):
                         'checkin_date':self._context['checkin_date'],
                         'checkout_date':self._context['checkin_date'],
                         'name':product.name,
+                        'price_unit': product.lst_price,
                         })]
         return res

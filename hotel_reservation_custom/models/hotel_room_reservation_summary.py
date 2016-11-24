@@ -68,6 +68,7 @@ class HotelSelectorWizard(models.TransientModel):
                 'context': {'room_id': room_id,
                             'checkin_date': checkin_date},
                 'target': 'new',
+                'flags': {'form': {'action_buttons': True}},
             }
 
     @api.model
