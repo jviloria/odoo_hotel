@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="assets_backend" name="point_of_sale assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/hotel_reservation/static/src/css/room_summary.css"/>
+            </xpath>
+        </template>
+
+    </data>
+</openerp>
