@@ -4,7 +4,7 @@
 
         <template id="assets_backend" name="point_of_sale assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
-                <link rel="stylesheet" href="/hotel_reservation/static/src/css/room_summary.css"/>
+                <link rel="stylesheet" href="/hotel_reservation_custom/static/src/css/room_summary.css"/>
             </xpath>
         </template>
 

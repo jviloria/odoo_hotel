@@ -27,12 +27,13 @@ Hotel Reservation Customizations
 
 Module for guest reservation adjusting.
     """,
-    "depends":['hotel_partner','hotel_custom'],
+    "depends":["hotel_partner","hotel_custom"],
     "category":"Hotel Management",
     "author":"John Viloria Amaris",
     "data":[
         "views/hotel_reservation_view.xml",
-        "views/roo_summary_view.xml",
+        "views/room_summary_view.xml",
     ],
+    "qweb": ["static/src/xml/*.xml"],
     "installable":True
  }
