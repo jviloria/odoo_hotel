@@ -20,14 +20,27 @@
 ##############################################################################
 
 import logging
+from datetime import datetime
 
-from openerp import api, models
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
+from openerp import api, models, fields
+
 
 _logger = logging.getLogger(__name__)
 
 class HotelFolio(models.Model):
     _inherit = 'hotel.folio'
 
+    @api.depends('room_lines')
+    def _getRoomLines(self):
+        for record in self:
+            rooms = ''
+            for room in record.room_lines:
+                rooms +=  room.product_id.name
+            record.room_number = rooms
+
+    room_number = fields.Char('Room No', size=20, compute='_getRoomLines')
+    
     @api.model
     def default_get(self, fields):
         """
@@ -63,3 +76,49 @@ class HotelFolio(models.Model):
                         'price_unit': product.lst_price,
                         })]
         return res
+		
+    @api.onchange('checkout_date', 'checkin_date')
+    def onchange_dates(self):
+        '''
+        This mathod gives the duration between check in and checkout
+        if customer will leave only for some hour it would be considers
+        as a whole day.If customer will check in checkout for more or equal
+        hours, which configured in company as additional hours than it would
+        be consider as full days
+        --------------------------------------------------------------------
+        @param self: object pointer
+        @return: Duration and checkout_date
+        '''
+        company_obj = self.env['res.company']
+        configured_addition_hours = 0
+        company_ids = company_obj.search([])
+        if company_ids.ids:
+            configured_addition_hours = company_ids[0].additional_hours
+        myduration = 0
+        chckin = self.checkin_date
+        chckout = self.checkout_date
+        if chckin and chckout:
+            server_dt = DTF
+            chkin_dt = datetime.strptime(chckin, server_dt)
+            chkout_dt = datetime.strptime(chckout, server_dt)
+            dur = chkout_dt - chkin_dt
+            sec_dur = dur.seconds
+            if (not dur.days and not sec_dur) or (dur.days and not sec_dur):
+                myduration = dur.days
+            else:
+                myduration = dur.days + 1
+            if configured_addition_hours > 0:
+                additional_hours = abs((dur.seconds / 60) / 60)
+                if additional_hours >= configured_addition_hours:
+                    myduration += 1
+            
+            sum = 0
+            for room in self.room_lines:
+                room.checkin_date = chkin_dt
+                room.checkout_date = chckout 
+                room.price_subtotal=myduration*room.price_unit
+                sum += room.price_subtotal
+        
+            self.duration = myduration
+            self.amount_untaxed = sum
+            self.amount_total = self.amount_untaxed + self.amount_tax

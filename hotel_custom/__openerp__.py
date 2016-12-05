@@ -31,6 +31,7 @@ Module for hotel enhancement.
     "category":"Hotel Management",
     "author":"John Viloria Amaris",
     "data":[
+        "views/hotel_view.xml",
     ],
     "installable":True
  }
