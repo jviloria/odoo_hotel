@@ -19,12 +19,23 @@
 #
 ##############################################################################
 
-from openerp import models, fields
+from openerp import api, models, fields
 
 
 class HotelReservation(models.Model):
 
     _inherit = ['hotel.reservation']
 
+    @api.depends('reservation_line')
+    def _get_room_lines(self):
+        for record in self:
+            rooms = []
+            for room in record.reservation_line:
+            	if room.name:
+                	rooms.append(room.name)
+            if rooms:
+                record.room_number = ','.join(rooms)
+
+    room_number = fields.Char('Room No', compute='_get_room_lines')
     accompanist_ids = fields.One2many('hotel.guest.accompanist', 
         'reservation_id', 'Guest Accompanist')
