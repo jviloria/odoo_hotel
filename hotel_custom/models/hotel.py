@@ -40,7 +40,7 @@ class HotelFolio(models.Model):
             if rooms:
                 record.room_number = ','.join(rooms)
 
-    room_number = fields.Char('Room No', size=20, compute='_get_room_lines')
+    room_number = fields.Char('Room No', compute='_get_room_lines')
     
     @api.model
     def default_get(self, fields):
