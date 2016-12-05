@@ -32,14 +32,15 @@ class HotelFolio(models.Model):
     _inherit = 'hotel.folio'
 
     @api.depends('room_lines')
-    def _getRoomLines(self):
+    def _get_room_lines(self):
         for record in self:
-            rooms = ''
+            rooms = []
             for room in record.room_lines:
-                rooms +=  room.product_id.name
-            record.room_number = rooms
+                rooms.append(room.product_id.name)
+            if rooms:
+                record.room_number = ','.join(rooms)
 
-    room_number = fields.Char('Room No', size=20, compute='_getRoomLines')
+    room_number = fields.Char('Room No', size=20, compute='_get_room_lines')
     
     @api.model
     def default_get(self, fields):
