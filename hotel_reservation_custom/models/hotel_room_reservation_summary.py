@@ -119,6 +119,17 @@ class HotelSelectorWizard(models.TransientModel):
     room_id = fields.Many2one('hotel.room', 'Room', required=True)
 
     @api.multi
+    def housekeeping_service(self):
+        return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'hotel.housekeeping',
+                'view_type': 'form',
+                'view_mode': 'form',
+                #'res_id': 'quick_room_reservation_form_view',
+                'target': 'new',
+            }
+
+    @api.multi
     def new_reservation(self):
         return {
                 'type': 'ir.actions.act_window',

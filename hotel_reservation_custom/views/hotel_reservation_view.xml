@@ -43,6 +43,7 @@
                 <header>
                     <button string="Reservacion" name="new_reservation" type="object"/>
                     <button string="Checkin" name="new_checkin" type="object"/>
+                    <button string="Housekeeping" name="housekeeping_service" type="object"/>
                     <button string="Bloquear" special="cancel" icon="gtk-cancel" />
                 </header>
                     <sheet>
