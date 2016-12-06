@@ -25,6 +25,19 @@ from openerp import api, models, fields
 class HotelReservation(models.Model):
 
     _inherit = ['hotel.reservation']
+	
+    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'),
+                              ('cancel', 'Cancel'), ('done', 'Checked')],
+                             'State', readonly=True,
+                             default=lambda *a: 'draft') 
+    checkin = fields.Datetime('Expected-Date-Arrival', required=True,
+                              readonly=True,
+                              states={'draft': [('readonly', False)],
+                                            'confirm': [('readonly', False)]})
+    checkout = fields.Datetime('Expected-Date-Departure', required=True,
+                               readonly=True,
+                               states={'draft': [('readonly', False)],
+                                            'confirm': [('readonly', False)]}) 
 
     @api.depends('reservation_line')
     def _get_room_lines(self):
