@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Tree view of hotel reservation -->
+        <record id="view_hotel_reservation_tree" model="ir.ui.view">
+            <field name="name">hotel.reservation.tree</field>
+            <field name="model">hotel.reservation</field>
+            <field name="inherit_id" ref="hotel_reservation.view_hotel_reservation_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='reservation_no']" position="after">
+                    <field name="room_number" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_hotel_reservation_form" model="ir.ui.view">
+            <field name="name">hotel.reservation.form</field>
+            <field name="model">hotel.reservation</field>
+            <field name="inherit_id" ref="hotel_reservation.view_hotel_reservation_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string='Guest Accompanist'>
+                        <field name='accompanist_ids'>
+                            <tree string="Accompanist" editable="bottom">
+                                <field name="accompanist_id"/>
+                            </tree>
+                            <form>
+                                <field name="accompanist_id"/>
+                            </form>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+         <!-- Selector Form view -->
+         <record id="hotel_selector_wizard_form_view" model="ir.ui.view">
+             <field name="name">hotel.selector.wizard.form</field>
+             <field name="model">hotel.selector.wizard</field>
+             <field name="arch" type="xml">
+                <form>
+                <header>
+                    <button string="Reservacion" name="new_reservation" type="object"/>
+                    <button string="Checkin" name="new_checkin" type="object"/>
+                    <button string="Bloquear" special="cancel" icon="gtk-cancel" />
+                </header>
+                    <sheet>
+                         <group colspan="4" col="4">
+                             <field name="room_id" />
+                             <field name="check_in"/>
+                         </group>
+                     </sheet>
+                </form>
+             </field>
+         </record>
+
+    </data>
+</openerp>

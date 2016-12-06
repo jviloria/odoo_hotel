@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_pos_session_form">
+            <field name="name">pos.session.form.view</field>
+            <field name="model">pos.session</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='statement_ids']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('sale_line_id', '=', False)]}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
