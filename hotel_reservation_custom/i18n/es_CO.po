@@ -1,0 +1,130 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hotel_reservation_custom
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0c-20161123\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-06 05:57+0000\n"
+"PO-Revision-Date: 2016-12-06 01:03-0500\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es_CO\n"
+"X-Generator: Poedit 1.8.7.1\n"
+
+#. module: hotel_reservation_custom
+#: model:ir.ui.view,arch_db:hotel_reservation_custom.view_hotel_reservation_form
+msgid "Accompanist"
+msgstr "Acompañante"
+
+#. module: hotel_reservation_custom
+#: model:ir.ui.view,arch_db:hotel_reservation_custom.hotel_selector_wizard_form_view
+msgid "Bloquear"
+msgstr "Bloquear"
+
+#. module: hotel_reservation_custom
+#: model:ir.ui.view,arch_db:hotel_reservation_custom.hotel_selector_wizard_form_view
+msgid "Checkin"
+msgstr "Checkin"
+
+#. module: hotel_reservation_custom
+#: model:ir.model.fields,field_description:hotel_reservation_custom.field_hotel_selector_wizard_create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: hotel_reservation_custom
+#: model:ir.model.fields,field_description:hotel_reservation_custom.field_hotel_selector_wizard_create_date
+msgid "Created on"
+msgstr "Creado"
+
+#. module: hotel_reservation_custom
+#: model:ir.model.fields,field_description:hotel_reservation_custom.field_hotel_selector_wizard_check_in
+msgid "Date"
+msgstr "Fecha"
+
+#. module: hotel_reservation_custom
+#: model:ir.model.fields,field_description:hotel_reservation_custom.field_hotel_selector_wizard_display_name
+msgid "Display Name"
+msgstr "Nombre Público"
+
+#. module: hotel_reservation_custom
+#: model:ir.model.fields,field_description:hotel_reservation_custom.field_hotel_reservation_accompanist_ids
+#: model:ir.ui.view,arch_db:hotel_reservation_custom.view_hotel_reservation_form
+msgid "Guest Accompanist"
+msgstr "Acompañante"
+
+#. module: hotel_reservation_custom
+#: model:ir.ui.view,arch_db:hotel_reservation_custom.hotel_selector_wizard_form_view
+msgid "Housekeeping"
+msgstr "Limpieza"
+
+#. module: hotel_reservation_custom
+#: model:ir.model.fields,field_description:hotel_reservation_custom.field_hotel_selector_wizard_id
+msgid "ID"
+msgstr "ID"
+
+#. module: hotel_reservation_custom
+#: model:ir.model.fields,field_description:hotel_reservation_custom.field_hotel_selector_wizard___last_update
+msgid "Last Modified on"
+msgstr "Última Modificación el"
+
+#. module: hotel_reservation_custom
+#: model:ir.model.fields,field_description:hotel_reservation_custom.field_hotel_selector_wizard_write_uid
+msgid "Last Updated by"
+msgstr "Actualizado por"
+
+#. module: hotel_reservation_custom
+#: model:ir.model.fields,field_description:hotel_reservation_custom.field_hotel_selector_wizard_write_date
+msgid "Last Updated on"
+msgstr "Actualizado"
+
+#. module: hotel_reservation_custom
+#: code:addons/hotel_reservation_custom/models/hotel_room_reservation_summary.py:72
+#, python-format
+msgid "Please Check Time period Date                                  From can't be greater than Date To !"
+msgstr "Please Check Time period Date                                  From can't be greater than Date To !"
+
+#. module: hotel_reservation_custom
+#: model:ir.model,name:hotel_reservation_custom.model_quick_room_reservation
+msgid "Quick Room Reservation"
+msgstr "Reservación Rápida"
+
+#. module: hotel_reservation_custom
+#: model:ir.ui.view,arch_db:hotel_reservation_custom.hotel_selector_wizard_form_view
+msgid "Reservacion"
+msgstr "Reservacion"
+
+#. module: hotel_reservation_custom
+#: model:ir.model,name:hotel_reservation_custom.model_hotel_reservation
+msgid "Reservation"
+msgstr "Reserva"
+
+#. module: hotel_reservation_custom
+#: model:ir.model.fields,field_description:hotel_reservation_custom.field_hotel_selector_wizard_room_id
+msgid "Room"
+msgstr "Habitación"
+
+#. module: hotel_reservation_custom
+#: model:ir.model.fields,field_description:hotel_reservation_custom.field_hotel_reservation_room_number
+msgid "Room No"
+msgstr "Habitación No"
+
+#. module: hotel_reservation_custom
+#: model:ir.model,name:hotel_reservation_custom.model_room_reservation_summary
+msgid "Room reservation summary"
+msgstr "Rack Gráfico"
+
+#. module: hotel_reservation_custom
+#: code:addons/hotel_reservation_custom/models/hotel_room_reservation_summary.py:71
+#, python-format
+msgid "User Error!"
+msgstr "Error de Usuario!"
+
+#. module: hotel_reservation_custom
+#: model:ir.model,name:hotel_reservation_custom.model_hotel_selector_wizard
+msgid "hotel.selector.wizard"
+msgstr "hotel.selector.wizard"
