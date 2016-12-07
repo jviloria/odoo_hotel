@@ -42,7 +42,10 @@ class RoomReservationSummary(models.Model):
     date_to = fields.Datetime('Date To', default=datetime.today()
                               + relativedelta(days=14))
 
-    def get_reservation(self, room, date):
+    def get_reservation_draft(self, room, date):
+        state_dict = {'draft':'Draft',
+                      'confirm':'Reserved',
+                      'done':'Occupied'}
         records = self.env['hotel.reservation'].search([
                                       ('checkin','<=',date),
                                       ('checkout','>=',date)
@@ -51,7 +54,28 @@ class RoomReservationSummary(models.Model):
             if record.reservation_line:
                 for line in record.reservation_line:
                     if room.name == line.name:
-                        return record.state
+                        return state_dict[record.state]
+        return False
+
+    # def get_reservation_confirm(self, room, date):
+    #     records = self.env['hotel.room.reservation.line'].search([
+    #                                   ('check_in','<=',date),
+    #                                   ('check_out','>=',date)
+    #                                  ])
+    #     for record in records:
+    #         if record.room_id.name == room.name and record.status == 'done':
+    #             return 'Occupied'
+    #     return False
+
+    def get_occupied_room(self, room, date):
+        records = self.env['hotel.folio.line'].search([
+                                      ('checkin_date','<=',date),
+                                      ('checkout_date','>=',date)
+                                     ])
+        for record in records:
+            if record.product_id.name == room.name:
+                #_logger.critical("CONFIRM STATE:%s - %s"%(room.name,record.status))
+                return 'Occupied'
         return False
 
     @api.onchange('date_from', 'date_to')
@@ -93,17 +117,17 @@ class RoomReservationSummary(models.Model):
                 room_list_stats = []
                 room_detail.update({'name': room.name or ''})
                 for chk_date in date_range_list:
-                    state = self.get_reservation(room, chk_date)
-                    if state:
-                        state = 'Draft' if state == 'draft' else 'Reserved'
-                        room_list_stats.append({'state': state,
-                                                'date': chk_date,
-                                                'room_id': room.id})
-                    else:
-                        room_list_stats.append({'state': 'Free',
-                                                'date': chk_date,
-                                                'room_id': room.id})
-
+                    state_draft = self.get_reservation_draft(room, chk_date)
+                    #state_confirm = self.get_reservation_confirm(room, chk_date)
+                    state_occupied = self.get_occupied_room(room, chk_date)
+                    state = 'Free'
+                    if state_occupied:
+                        state = state_occupied
+                    elif state_draft:
+                        state = state_draft
+                    room_list_stats.append({'state': state,
+                                            'date': chk_date,
+                                            'room_id': room.id})
                 room_detail.update({'value': room_list_stats})
                 all_room_detail.append(room_detail)
             main_header.append({'header': summary_header_list})
