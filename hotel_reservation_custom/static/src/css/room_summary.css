@@ -1,7 +1,7 @@
 
 .table_reserved_draft
 {
-    background-color: orange;
+    background-color: yellow;
     color: black;
     text-align: center;
     min-width:100px;
@@ -15,4 +15,13 @@
     text-align: center;
     min-width:100px;
     vertical-align: middle;
+}
+
+.table_reserved
+{
+	background-color: orange;
+	color: white;
+	text-align: center;
+	min-width:100px;
+	vertical-align: middle;
 }
