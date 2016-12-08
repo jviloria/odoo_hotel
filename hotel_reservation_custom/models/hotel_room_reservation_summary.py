@@ -75,8 +75,9 @@ class RoomReservationSummary(models.Model):
         for record in records:
             if record.product_id.name == room.name:
                 #_logger.critical("CONFIRM STATE:%s - %s"%(room.name,record.status))
-                return 'Occupied'
-        return False
+                folio_id = record.folio_id.id
+                return 'Occupied', folio_id
+        return False, False
 
     @api.onchange('date_from', 'date_to')
     def get_room_summary(self):
@@ -117,9 +118,11 @@ class RoomReservationSummary(models.Model):
                 room_list_stats = []
                 room_detail.update({'name': room.name or ''})
                 for chk_date in date_range_list:
+                    folio_id = False
                     state_draft = self.get_reservation_draft(room, chk_date)
                     #state_confirm = self.get_reservation_confirm(room, chk_date)
-                    state_occupied = self.get_occupied_room(room, chk_date)
+                    state_occupied, folio_id = self.get_occupied_room(room, 
+                                                                    chk_date)
                     state = 'Free'
                     if state_occupied:
                         state = state_occupied
@@ -127,7 +130,8 @@ class RoomReservationSummary(models.Model):
                         state = state_draft
                     room_list_stats.append({'state': state,
                                             'date': chk_date,
-                                            'room_id': room.id})
+                                            'room_id': room.id,
+                                            'folio_id':folio_id})
                 room_detail.update({'value': room_list_stats})
                 all_room_detail.append(room_detail)
             main_header.append({'header': summary_header_list})
