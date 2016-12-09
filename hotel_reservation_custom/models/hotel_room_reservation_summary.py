@@ -54,18 +54,8 @@ class RoomReservationSummary(models.Model):
             if record.reservation_line:
                 for line in record.reservation_line:
                     if room.name == line.name:
-                        return state_dict[record.state]
-        return False
-
-    # def get_reservation_confirm(self, room, date):
-    #     records = self.env['hotel.room.reservation.line'].search([
-    #                                   ('check_in','<=',date),
-    #                                   ('check_out','>=',date)
-    #                                  ])
-    #     for record in records:
-    #         if record.room_id.name == room.name and record.status == 'done':
-    #             return 'Occupied'
-    #     return False
+                        return state_dict[record.state], record.id
+        return False, False
 
     def get_occupied_room(self, room, date):
         records = self.env['hotel.folio.line'].search([
@@ -119,8 +109,9 @@ class RoomReservationSummary(models.Model):
                 room_detail.update({'name': room.name or ''})
                 for chk_date in date_range_list:
                     folio_id = False
-                    state_draft = self.get_reservation_draft(room, chk_date)
-                    #state_confirm = self.get_reservation_confirm(room, chk_date)
+                    reservation_id = False
+                    state_draft, reservation_id = self.get_reservation_draft(
+                                                  room, chk_date)
                     state_occupied, folio_id = self.get_occupied_room(room, 
                                                                     chk_date)
                     state = 'Free'
@@ -131,7 +122,8 @@ class RoomReservationSummary(models.Model):
                     room_list_stats.append({'state': state,
                                             'date': chk_date,
                                             'room_id': room.id,
-                                            'folio_id':folio_id})
+                                            'folio_id':folio_id,
+                                            'reservation':reservation_id})
                 room_detail.update({'value': room_list_stats})
                 all_room_detail.append(room_detail)
             main_header.append({'header': summary_header_list})
