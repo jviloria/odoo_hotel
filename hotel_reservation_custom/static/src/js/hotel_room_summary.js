@@ -91,10 +91,12 @@ var RoomSummary = form_common.FormWidget.extend(form_common.ReinitializeWidgetMi
             this.$el.find(".table_reserved").bind("click", function(event){
                 self.action_manager.do_action({
                         type: 'ir.actions.act_window',
-                        res_model: "hotel.selector.wizard",
+                        res_model: "hotel.reservation",
                         views: [[false, 'form']],
+                        res_id: parseInt($(this).attr("reservation")),
                         target: 'new',
                         context: {"room_id": $(this).attr("data"), 'date': $(this).attr("date")},
+                        flags: {'form': {'action_buttons': true}},
                 });
             });
             this.$el.find(".table_occupied").bind("click", function(event){
@@ -105,6 +107,7 @@ var RoomSummary = form_common.FormWidget.extend(form_common.ReinitializeWidgetMi
                         res_id: parseInt($(this).attr("folio")),
                         target: 'new',
                         context: {"room_id": $(this).attr("data"), 'date': $(this).attr("date")},
+                        flags: {'form': {'action_buttons': true}},
                 });
             });
             this.$el.find(".table_reserved_draft").bind("click", function(event){
@@ -115,6 +118,7 @@ var RoomSummary = form_common.FormWidget.extend(form_common.ReinitializeWidgetMi
                         res_id: parseInt($(this).attr("reservation")),
                         target: 'new',
                         context: {"room_id": $(this).attr("data"), 'date': $(this).attr("date")},
+                        flags: {'form': {'action_buttons': true}},
                 });
             });
 
