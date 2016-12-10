@@ -57,17 +57,20 @@ class RoomReservationSummary(models.Model):
                         return state_dict[record.state], record.id
         return False, False
 
-    def get_occupied_room(self, room, date):
+    def get_occupied_room(self, room, date, folio_data):
         records = self.env['hotel.folio.line'].search([
                                       ('checkin_date','<=',date),
                                       ('checkout_date','>=',date)
                                      ])
         for record in records:
             if record.product_id.name == room.name:
-                #_logger.critical("CONFIRM STATE:%s - %s"%(room.name,record.status))
-                folio_id = record.folio_id.id
-                return 'Occupied', folio_id
-        return False, False
+                checkout_date = datetime.strptime(
+                        record.folio_id.checkout_date, DTF).date()
+                folio_data['folio_id'] = record.folio_id.id
+                folio_data['partner_name'] = record.folio_id.partner_id.name
+                folio_data['checkout_date'] = checkout_date
+                return 'Occupied'
+        return False
 
     @api.onchange('date_from', 'date_to')
     def get_room_summary(self):
@@ -109,20 +112,26 @@ class RoomReservationSummary(models.Model):
                 room_detail.update({'name': room.name or ''})
                 for chk_date in date_range_list:
                     folio_id = False
+                    tooltip_info = False
+                    folio_data = {'folio_id': False, 'partner_id':False,
+                                  'checkout_date':False, 'state': False}
                     reservation_id = False
                     state_draft, reservation_id = self.get_reservation_draft(
                                                   room, chk_date)
-                    state_occupied, folio_id = self.get_occupied_room(room, 
-                                                                    chk_date)
+                    state_occupied = self.get_occupied_room(room, chk_date, folio_data)
                     state = 'Free'
                     if state_occupied:
                         state = state_occupied
+                        folio_id = folio_data['folio_id']
+                        tooltip_info = '%s\nCheckout: %s'%(folio_data['partner_name'],
+                                                 folio_data['checkout_date'])
                     elif state_draft:
                         state = state_draft
                     room_list_stats.append({'state': state,
                                             'date': chk_date,
                                             'room_id': room.id,
                                             'folio_id':folio_id,
+                                            'tooltip_info':tooltip_info,
                                             'reservation':reservation_id})
                 room_detail.update({'value': room_list_stats})
                 all_room_detail.append(room_detail)
