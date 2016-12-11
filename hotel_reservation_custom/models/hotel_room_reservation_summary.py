@@ -42,7 +42,7 @@ class RoomReservationSummary(models.Model):
     date_to = fields.Datetime('Date To', default=datetime.today()
                               + relativedelta(days=14))
 
-    def get_reservation_draft(self, room, date):
+    def get_reservation_draft(self, room, date, folio_data):
         state_dict = {'draft':'Draft',
                       'confirm':'Reserved',
                       'done':'Occupied'}
@@ -54,6 +54,10 @@ class RoomReservationSummary(models.Model):
             if record.reservation_line:
                 for line in record.reservation_line:
                     if room.name == line.name:
+                        checkout_date = datetime.strptime(
+                                        record.checkout, DTF).date()
+                        folio_data['checkout_date'] = checkout_date
+                        folio_data['partner_name'] = record.partner_id.name
                         return state_dict[record.state], record.id
         return False, False
 
@@ -114,19 +118,23 @@ class RoomReservationSummary(models.Model):
                     folio_id = False
                     tooltip_info = False
                     folio_data = {'folio_id': False, 'partner_id':False,
-                                  'checkout_date':False, 'state': False}
+                                  'checkout_date':False, 'state': False,
+                                  'partner_name': False}
                     reservation_id = False
                     state_draft, reservation_id = self.get_reservation_draft(
-                                                  room, chk_date)
-                    state_occupied = self.get_occupied_room(room, chk_date, folio_data)
+                                                  room, chk_date, folio_data)
+                    state_occupied = self.get_occupied_room(room, chk_date, 
+                                                            folio_data)
                     state = 'Free'
                     if state_occupied:
                         state = state_occupied
                         folio_id = folio_data['folio_id']
-                        tooltip_info = '%s\nCheckout: %s'%(folio_data['partner_name'],
-                                                 folio_data['checkout_date'])
                     elif state_draft:
                         state = state_draft
+                    if folio_data['partner_name']:
+                        tooltip_info = '%s\nCheckout: %s'%(
+                                    folio_data['partner_name'],
+                                    folio_data['checkout_date'])
                     room_list_stats.append({'state': state,
                                             'date': chk_date,
                                             'room_id': room.id,

@@ -5,10 +5,10 @@
     <t t-extend="summaryDetails">
         <t t-jquery="td.table_reserved" t-operation="replace">
             <t t-if="status.state == 'Draft'">
-                <td class="table_reserved_draft" t-att-title = "status.room_id" t-att-reservation = "status.reservation" t-att-data = "status.room_id" t-att-date = "status.date" style="text-align:center;"><t t-esc="status.state"/></td>
+                <td class="table_reserved_draft" t-att-title = "status.tooltip_info" t-att-reservation = "status.reservation" t-att-data = "status.room_id" t-att-date = "status.date" style="text-align:center;"><t t-esc="status.state"/></td>
             </t>
             <t t-if="status.state == 'Reserved'">
-                <td class="table_reserved" t-att-reservation = "status.reservation" t-att-data = "status.room_id" t-att-date = "status.date" style="text-align:center;"><t t-esc="status.state"/></td>
+                <td class="table_reserved" t-att-title = "status.tooltip_info" t-att-reservation = "status.reservation" t-att-data = "status.room_id" t-att-date = "status.date" style="text-align:center;"><t t-esc="status.state"/></td>
             </t>
             <t t-if="status.state == 'Occupied'">
                 <td class="table_occupied" t-att-title = "status.tooltip_info" t-att-folio = "status.folio_id" t-att-data = "status.room_id" t-att-date = "status.date" style="text-align:center;"><t t-esc="status.state"/></td>
