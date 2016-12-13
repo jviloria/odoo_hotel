@@ -41,6 +41,7 @@ class RoomReservationSummary(models.Model):
     date_from = fields.Datetime('Date From', default=datetime.today())
     date_to = fields.Datetime('Date To', default=datetime.today()
                               + relativedelta(days=14))
+    convention_image = fields.Binary('Conventions', readonly=True)
 
     def get_reservation_draft(self, room, date, folio_data):
         state_dict = {'draft':'Draft',
