@@ -33,6 +33,7 @@ Module for guest reservation adjusting.
     "data":[
         "views/hotel_reservation_view.xml",
         "views/room_summary_view.xml",
+        "data/hotel_summary_data.xml",
     ],
     "qweb": ["static/src/xml/*.xml"],
     "installable":True

@@ -1,7 +1,7 @@
 
 .table_reserved_draft
 {
-    background-color: yellow;
+    background-color: #F7CA18;
     color: black;
     text-align: center;
     min-width:100px;
@@ -11,7 +11,7 @@
 
 .table_occupied
 {
-    background-color: blue;
+    background-color: #2574A9;
     color: white;
     text-align: center;
     min-width:100px;
@@ -21,7 +21,7 @@
 
 .table_reserved
 {
-	background-color: orange;
+	background-color: #F89406;
 	color: white;
 	text-align: center;
 	min-width:100px;
@@ -32,6 +32,16 @@
 .table_free
 {
     background-color: white;
+    color: black;
+    text-align: center;
+    min-width:100px;
+    vertical-align: middle;
+    cursor:pointer;
+}
+
+.table_blocked
+{
+    background-color: #D91E18;
     color: black;
     text-align: center;
     min-width:100px;

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data> <!--noupdate="1"/-->
+
+        <record id="hotel_summary_convention_attach" model="ir.attachment">
+            <field name="name">summary_convention.png</field>
+            <field name="datas_fname">summary_convention.png</field>
+            <field name="datas" type="base64" file="hotel_reservation_custom/static/src/img/summary_convention.png"></field>
+            <!--field name="res_model">project.task</field>
+            <field name="res_id" ref="project_task_data_8"/-->
+        </record>
+
+    </data>
+</openerp>
