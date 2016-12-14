@@ -38,10 +38,17 @@ class RoomReservationSummary(models.Model):
 
     _inherit = 'room.reservation.summary'
 
+    def _get_convention_image(self):
+        image = self.env['ir.attachment'].search(
+                [('name','=','summary_convention.png')]
+                )
+        return image.datas
+
     date_from = fields.Datetime('Date From', default=datetime.today())
     date_to = fields.Datetime('Date To', default=datetime.today()
                               + relativedelta(days=14))
-    convention_image = fields.Binary('Conventions', readonly=False)
+    convention_image = fields.Binary('Conventions', readonly=False,
+                                      default=_get_convention_image)
 
     def get_reservation_draft(self, room, date, folio_data):
         state_dict = {'draft':'Draft',
