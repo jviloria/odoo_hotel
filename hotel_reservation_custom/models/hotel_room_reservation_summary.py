@@ -172,6 +172,7 @@ class HotelSelectorWizard(models.TransientModel):
                 'view_mode': 'form',
                 #'res_id': 'quick_room_reservation_form_view',
                 'target': 'new',
+                'flags': {'form': {'action_buttons': True}},
             }
 
     @api.multi
