@@ -179,11 +179,12 @@ class HotelSelectorWizard(models.TransientModel):
     def new_reservation(self):
         return {
                 'type': 'ir.actions.act_window',
-                'res_model': 'quick.room.reservation',
+                'res_model': 'hotel.reservation',
                 'view_type': 'form',
                 'view_mode': 'form',
                 #'res_id': 'quick_room_reservation_form_view',
                 'target': 'new',
+                'flags': {'form': {'action_buttons': True}},
             }
 
     @api.multi
