@@ -84,6 +84,16 @@ class RoomReservationSummary(models.Model):
                 return 'Occupied'
         return False
 
+    def get_block_room(self, room, date):
+        records = self.env['hotel.room.maintenance'].search([
+                                      ('block_start_time','<=',date),
+                                      ('block_end_time','>=',date)
+                                     ])
+        for record in records:
+            if record.room_no.name == room.name:
+                return 'Blocked'
+        return False
+
     @api.onchange('date_from', 'date_to')
     def get_room_summary(self):
         '''
@@ -133,10 +143,14 @@ class RoomReservationSummary(models.Model):
                                                   room, chk_date, folio_data)
                     state_occupied = self.get_occupied_room(room, chk_date, 
                                                             folio_data)
+                    state_blocked = self.get_block_room(room, chk_date)
+ 
                     state = 'Free'
                     if state_occupied:
                         state = state_occupied
                         folio_id = folio_data['folio_id']
+                    elif state_blocked:
+                        state = state_blocked
                     elif state_draft:
                         state = state_draft
                     if folio_data['partner_name']:
