@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Form view of hotel room maintenance -->
+        <record id="hotel_room_maintenance_form_view" model="ir.ui.view">
+            <field name="name">hotel.room.maintenance.form</field>
+            <field name="model">hotel.room.maintenance</field>
+            <field name="arch" type="xml">
+                <form string="Housekeeping" >
+                    <header>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="room_no" select="1" domain="[('isroom','=',True)]" />
+                            </group>
+                            <group>
+                                <field name="block_start_time" />
+                                <field name="block_end_time" />
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree view of hotel room maintenance -->
+        <record id="hotel_room_maintenance_tree_view" model="ir.ui.view">
+            <field name="name">hotel.room.maintenance.tree</field>
+            <field name="model">hotel.room.maintenance</field>
+            <field name="arch" type="xml">
+                <tree string="Room Maintenance">
+                    <field name="room_no" />
+                    <field name="block_start_time" />
+                    <field name="block_end_time" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action for hotel room maintenance -->
+        <record model="ir.actions.act_window" id="action_hotel_room_maintenance">
+            <field name="name">Room Block</field>
+            <field name="res_model">hotel.room.maintenance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="hotel_room_maintenance_tree_view" />
+        </record>
+
+        <menuitem name="Room Blocking" id="menu_hotel_room_maintenance"
+        action="action_hotel_room_maintenance" parent="hotel_housekeeping.menu_housekeeping"
+        sequence="5" />
+
+    </data>
+</openerp>

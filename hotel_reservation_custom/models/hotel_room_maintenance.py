@@ -19,6 +19,20 @@
 #
 ##############################################################################
 
-import hotel_reservation
-import hotel_room_reservation_summary
-import hotel_room_maintenance
+import logging
+
+from openerp import models, fields
+
+_logger = logging.getLogger(__name__)
+
+
+class HotelRoomMaintenance(models.Model):
+
+    _name = "hotel.room.maintenance"
+    _description = "Room Maintenance"
+
+    room_no = fields.Many2one('hotel.room', 'Room No', required=True)
+    block_start_time = fields.Datetime('Clean Start Time',
+                                       required=True)
+    block_end_time = fields.Datetime('Clean End Time', required=True)
+    description = fields.Text('Description')
