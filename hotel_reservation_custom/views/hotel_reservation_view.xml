@@ -44,7 +44,7 @@
                     <button string="Reservacion" name="new_reservation" type="object"/>
                     <button string="Checkin" name="new_checkin" type="object"/>
                     <button string="Housekeeping" name="housekeeping_service" type="object"/>
-                    <button string="Bloquear" special="cancel" icon="gtk-cancel" />
+                    <button string="Bloquear" type="object" name="room_blocking"/>
                 </header>
                     <sheet>
                          <group colspan="4" col="4">
@@ -69,30 +69,3 @@
 
     </data>
 </openerp>
-
-<!--
-                 <form string="Reservation Summary">
-                     <header>
-                         <separator string="Room Reservation Summary" colspan="4"/>
-                     </header>
-                     <sheet>
-                         <group colspan="4" col="4">
-                             <label for="date_from" string="Summary Period"/>
-                             <div>
-                                 <field name="date_from" class="oe_inline"/>
-                                 to
-                                 <field name="date_to" class="oe_inline"/>
-                             </div>
-                         </group>
-                         <notebook>
-                             <page string="Room Summary">
-                                 <field name="summary_header" colspan="4" invisible="1"/>
-                                 <field name="room_summary" colspan="4" invisible="1"/>
-                                 <widget type="Room_Reservation"></widget>
-                             </page>
-                         </notebook>
-                     </sheet>
-                 </form>
-
-
-    -->

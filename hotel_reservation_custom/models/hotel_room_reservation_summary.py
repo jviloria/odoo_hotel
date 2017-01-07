@@ -75,7 +75,7 @@ class RoomReservationSummary(models.Model):
     convention_image = fields.Binary('Conventions', readonly=False,
                                       default=_get_convention_image)
 
-    def get_reservation_draft(self, room, date, folio_data):
+    def get_reservation_draft(self, room, date, room_info):
         state_dict = {'draft':'Draft',
                       'confirm':'Reserved',
                       'done':'Occupied'}
@@ -89,12 +89,15 @@ class RoomReservationSummary(models.Model):
                     if room.name == line.name:
                         checkout_date = datetime.strptime(
                                         record.checkout, DTF).date()
-                        folio_data['checkout_date'] = checkout_date
-                        folio_data['partner_name'] = record.partner_id.name
+                        room_info['tooltip_info'] = '%s\nCheckout: %s'%(
+                                    record.partner_id.name, checkout_date)
+                        _logger.critical('%s - %s'%(line.name,room_info['tooltip_info']))
+                        #room_info['checkout_date'] = checkout_date
+                        #room_info['partner_name'] = record.partner_id.name
                         return state_dict[record.state], record.id
         return False, False
 
-    def get_occupied_room(self, room, date, folio_data):
+    def get_occupied_room(self, room, date, room_info):
         date_end = date[:10] + ' 23:00:00'
         date = self._lctime_to_utctime(date)
         records = self.env['hotel.folio.line'].search([
@@ -105,10 +108,21 @@ class RoomReservationSummary(models.Model):
             if record.product_id.name == room.name:
                 checkout_date = datetime.strptime(
                         record.folio_id.checkout_date, DTF)
-                folio_data['folio_id'] = record.folio_id.id
-                folio_data['partner_name'] = record.folio_id.partner_id.name
-                folio_data['checkout_date'] = checkout_date
+                room_info['folio_id'] = record.folio_id.id
+                room_info['tooltip_info'] = '%s\nCheckout: %s'%(
+                            record.folio_id.partner_id.name, checkout_date)
                 return 'Occupied'
+        return False
+
+    def get_block_room(self, room, date, room_info):
+        records = self.env['hotel.room.maintenance'].search([
+                                      ('block_start_time','<=',date),
+                                      ('block_end_time','>=',date)
+                                     ])
+        for record in records:
+            if record.room_no.name == room.name:
+                room_info['tooltip_info'] = record.description
+                return 'Blocked'
         return False
 
     @api.onchange('date_from', 'date_to')
@@ -155,27 +169,28 @@ class RoomReservationSummary(models.Model):
                     folio_data = {'folio_id': False, 'partner_id':False,
                                   'checkout_date':False, 'state': False,
                                   'partner_name': False}
+                    room_info = {}
                     reservation_id = False
                     state_draft, reservation_id = self.get_reservation_draft(
-                                                  room, chk_date, folio_data)
+                                                  room, chk_date, room_info)
                     state_occupied = self.get_occupied_room(room, chk_date, 
-                                                            folio_data)
+                                                            room_info)
+                    state_blocked = self.get_block_room(room, chk_date, 
+                                                        room_info)
+ 
                     state = 'Free'
                     if state_occupied:
                         state = state_occupied
                         folio_id = folio_data['folio_id']
+                    elif state_blocked:
+                        state = state_blocked
                     elif state_draft:
                         state = state_draft
-                    if folio_data['partner_name']:
-                        tooltip_info = '%s\nCheckout: %s'%(
-                                    folio_data['partner_name'],
-                                    folio_data['checkout_date'])
-                    room_list_stats.append({'state': state,
-                                            'date': chk_date,
-                                            'room_id': room.id,
-                                            'folio_id':folio_id,
-                                            'tooltip_info':tooltip_info,
-                                            'reservation':reservation_id})
+                    room_info['state'] = state
+                    room_info['date'] = chk_date
+                    room_info['room_id'] = room.id
+                    room_info['reservation'] = reservation_id
+                    room_list_stats.append(room_info)
                 room_detail.update({'value': room_list_stats})
                 all_room_detail.append(room_detail)
             main_header.append({'header': summary_header_list})
@@ -204,13 +219,18 @@ class HotelSelectorWizard(models.TransientModel):
 
     @api.multi
     def new_reservation(self):
+        room_id = self.room_id.id
+        checkin_date = self.check_in
         return {
                 'type': 'ir.actions.act_window',
-                'res_model': 'quick.room.reservation',
+                'res_model': 'hotel.reservation',
                 'view_type': 'form',
                 'view_mode': 'form',
                 #'res_id': 'quick_room_reservation_form_view',
+                'context': {'room_id': room_id,
+                            'checkin_date': checkin_date},
                 'target': 'new',
+                'flags': {'form': {'action_buttons': True}},
             }
 
     @api.multi
@@ -225,6 +245,21 @@ class HotelSelectorWizard(models.TransientModel):
                 #'res_id': 'quick_room_reservation_form_view',
                 'context': {'room_id': room_id,
                             'checkin_date': checkin_date},
+                'target': 'new',
+                'flags': {'form': {'action_buttons': True}},
+            }
+
+    @api.multi
+    def room_blocking(self):
+        room_id = self.room_id.id
+        block_date = self.check_in
+        return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'hotel.room.maintenance',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'context': {'room_no': room_id,
+                            'date': block_date},
                 'target': 'new',
                 'flags': {'form': {'action_buttons': True}},
             }
