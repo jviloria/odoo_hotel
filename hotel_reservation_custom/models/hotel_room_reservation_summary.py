@@ -108,6 +108,8 @@ class RoomReservationSummary(models.Model):
             if record.product_id.name == room.name:
                 checkout_date = datetime.strptime(
                         record.folio_id.checkout_date, DTF)
+                checkout_date = self._utc_to_lctime(
+                                checkout_date.strftime(DTF))
                 room_info['folio_id'] = record.folio_id.id
                 room_info['tooltip_info'] = '%s\nCheckout: %s'%(
                             record.folio_id.partner_id.name, checkout_date)
