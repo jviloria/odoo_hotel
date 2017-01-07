@@ -21,7 +21,7 @@
 
 import logging
 
-from openerp import models, fields
+from openerp import api, models, fields
 
 _logger = logging.getLogger(__name__)
 
@@ -31,8 +31,29 @@ class HotelRoomMaintenance(models.Model):
     _name = "hotel.room.maintenance"
     _description = "Room Maintenance"
 
+    @api.model
+    def default_get(self, fields):
+        """
+        To get default values for the object.
+        @param self: The object pointer.
+        @param fields: List of fields for which we want default values
+        @return: A dictionary which of fields with values.
+        """
+        if self._context is None:
+            self._context = {}
+        res = super(HotelRoomMaintenance, self).default_get(fields)
+        if self._context:
+            keys = self._context.keys()
+            if 'date' in keys:
+                res.update({'block_start_time': self._context['date']})
+            if 'room_no' in keys:
+                room_no = self._context['room_no']
+                res.update({'room_no': int(room_no)})
+        return res
+
     room_no = fields.Many2one('hotel.room', 'Room No', required=True)
     block_start_time = fields.Datetime('Clean Start Time',
                                        required=True)
     block_end_time = fields.Datetime('Clean End Time', required=True)
-    description = fields.Text('Description')
+    description = fields.Text('Description', default='Maintenance',
+    							required=True)

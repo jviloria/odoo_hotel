@@ -49,6 +49,26 @@ class HotelReservation(models.Model):
             if rooms:
                 record.room_number = ','.join(rooms)
 
+    @api.model
+    def default_get(self, fields):
+        """
+        To get default values for the object.
+        @param self: The object pointer.
+        @param fields: List of fields for which we want default values
+        @return: A dictionary which of fields with values.
+        """
+        if self._context is None:
+            self._context = {}
+        res = super(HotelReservation, self).default_get(fields)
+        if self._context:
+            keys = self._context.keys()
+            if 'checkin_date' in keys:
+                res.update({'checkin': self._context['checkin_date']})
+            # if 'room_id' in keys:
+            #     roomid = self._context['room_id']
+            #     res.update({'room_id': int(roomid)})
+        return res
+
     room_number = fields.Char('Room No', compute='_get_room_lines')
     accompanist_ids = fields.One2many('hotel.guest.accompanist', 
         'reservation_id', 'Guest Accompanist')
