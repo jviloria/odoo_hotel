@@ -20,6 +20,7 @@
 ##############################################################################
 
 import logging
+import pytz
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -34,9 +35,33 @@ def extract_date(date):
     except:
         return False
 
+def str_to_datetime(strdate):
+    return datetime.strptime(strdate, DTF)
+
 class RoomReservationSummary(models.Model):
 
     _inherit = 'room.reservation.summary'
+
+    def _lctime_to_utctime(self, strdate):
+        if self._context is None:
+            self._context = {}
+        user_tz = pytz.timezone(self._context['tz']) if 'tz' in self._context \
+                                      else pytz.timezone('America/Bogota')
+        _logger.critical('TZ: %s'%user_tz)
+        dt = datetime.strptime(strdate, DTF)
+        user_dt = user_tz.localize(dt, is_dst=None)
+        return user_dt.astimezone(pytz.utc).strftime(DTF) or False
+
+    def _utc_to_lctime(self, strdate):
+        if self._context is None:
+            self._context = {}
+        user_tz = pytz.timezone(self._context['tz']) if 'tz' in self._context \
+                                else pytz.timezone('America/Bogota')
+        date = str_to_datetime(strdate)
+        today = datetime.today()
+        tzoffset = user_tz.utcoffset(today)
+        date = date + tzoffset
+        return date.strftime(DTF)
 
     def _get_convention_image(self):
         image = self.env['ir.attachment'].search(
@@ -70,6 +95,8 @@ class RoomReservationSummary(models.Model):
         return False, False
 
     def get_occupied_room(self, room, date, folio_data):
+        date_end = date[:10] + ' 23:00:00'
+        date = self._lctime_to_utctime(date)
         records = self.env['hotel.folio.line'].search([
                                       ('checkin_date','<=',date),
                                       ('checkout_date','>=',date)
@@ -77,7 +104,7 @@ class RoomReservationSummary(models.Model):
         for record in records:
             if record.product_id.name == room.name:
                 checkout_date = datetime.strptime(
-                        record.folio_id.checkout_date, DTF).date()
+                        record.folio_id.checkout_date, DTF)
                 folio_data['folio_id'] = record.folio_id.id
                 folio_data['partner_name'] = record.folio_id.partner_id.name
                 folio_data['checkout_date'] = checkout_date
