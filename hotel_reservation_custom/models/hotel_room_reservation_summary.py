@@ -83,21 +83,27 @@ class RoomReservationSummary(models.Model):
                                       default=_get_convention_image)
 
     def get_reservation_draft(self, room, date, room_info):
+        date_end = self._lctime_to_utctime(date[:10] + ' 15:00:00')
+        date = self._lctime_to_utctime(date)
         state_dict = {'draft':'Draft',
                       'confirm':'Reserved',
                       'done':'Occupied'}
         records = self.env['hotel.reservation'].search([
                                       ('checkin','<=',date),
-                                      ('checkout','>=',date)
+                                      ('checkout','>=',date_end)
                                      ])
         for record in records:
             if record.reservation_line:
                 for line in record.reservation_line:
                     if room.name == line.name:
                         checkout_date = datetime.strptime(
-                                        record.checkout, DTF).date()
+                                        record.checkout, DTF)
+                        checkout_date = str_to_datetime(self._utc_to_lctime(
+                                        checkout_date.strftime(DTF)))\
+                                        .strftime('%Y-%m-%d  %I:%M %p')
                         room_info['tooltip_info'] = '%s\nCheckout: %s'%(
                                     record.partner_id.name, checkout_date)
+                        room_info['reservation'] = record.id
                         return state_dict[record.state], record.id
         return False, False
 
@@ -196,7 +202,6 @@ class RoomReservationSummary(models.Model):
                     room_info['state'] = state
                     room_info['date'] = chk_date
                     room_info['room_id'] = room.id
-                    room_info['reservation'] = reservation_id
                     room_list_stats.append(room_info)
                 room_detail.update({'value': room_list_stats})
                 all_room_detail.append(room_detail)
