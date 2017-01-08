@@ -64,9 +64,19 @@ class HotelReservation(models.Model):
             keys = self._context.keys()
             if 'checkin_date' in keys:
                 res.update({'checkin': self._context['checkin_date']})
-            # if 'room_id' in keys:
-            #     roomid = self._context['room_id']
-            #     res.update({'room_id': int(roomid)})
+            if 'room_id' in keys:   #Se crean datos de la habitacion
+                #_logger.critical("ROOM ID: %s"%self._context['room_id'])
+                roomid = self._context['room_id']
+                room = self.env['hotel.room'].search(
+                            [('id','=',roomid)])
+                # if room:
+                #     product = room.product_id
+                #     product_uom = product.product_tmpl_id.uom_id.id
+                #     #_logger.critical('PRODUCT UOM:%s'%product_uom)
+                #     res['reservation_line'] = [(0,0,{
+                #         'reserve':room.id,
+                #         'name':product.name,
+                #         })]
         return res
 
     room_number = fields.Char('Room No', compute='_get_room_lines')
