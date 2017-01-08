@@ -47,7 +47,6 @@ class RoomReservationSummary(models.Model):
             self._context = {}
         user_tz = pytz.timezone(self._context['tz']) if 'tz' in self._context \
                                       else pytz.timezone('America/Bogota')
-        _logger.critical('TZ: %s'%user_tz)
         dt = datetime.strptime(strdate, DTF)
         user_dt = user_tz.localize(dt, is_dst=None)
         return user_dt.astimezone(pytz.utc).strftime(DTF) or False
@@ -91,9 +90,6 @@ class RoomReservationSummary(models.Model):
                                         record.checkout, DTF).date()
                         room_info['tooltip_info'] = '%s\nCheckout: %s'%(
                                     record.partner_id.name, checkout_date)
-                        _logger.critical('%s - %s'%(line.name,room_info['tooltip_info']))
-                        #room_info['checkout_date'] = checkout_date
-                        #room_info['partner_name'] = record.partner_id.name
                         return state_dict[record.state], record.id
         return False, False
 
@@ -144,11 +140,16 @@ class RoomReservationSummary(models.Model):
                 raise except_orm(_('User Error!'),
                                  _('Please Check Time period Date \
                                  From can\'t be greater than Date To !'))
-            d_frm_obj = (datetime.strptime
-                         (self.date_from, DTF))
-            d_to_obj = (datetime.strptime
-                        (self.date_to, DTF))
+            d_frm_obj = datetime.strptime(self._utc_to_lctime(
+                                          self.date_from), DTF)
+            d_to_obj = datetime.strptime(self._utc_to_lctime(
+                                          self.date_to), DTF)
+            # d_frm_obj = (datetime.strptime
+            #              (self.date_from, DTF))
+            # d_to_obj = (datetime.strptime
+            #             (self.date_to, DTF))
             temp_date = d_frm_obj
+            _logger.critical('FROM DATE: %s'%d_frm_obj)
             while(temp_date <= d_to_obj):
                 val = ''
                 val = (str(temp_date.strftime("%a")) + ' ' +
