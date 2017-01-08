@@ -115,7 +115,8 @@ class RoomReservationSummary(models.Model):
                                       ('checkout_date','>=',date_end)
                                      ])
         for record in records:
-            if record.product_id.name == room.name:
+            if record.product_id.name == room.name and \
+                    record.folio_id.state not in ['done','cancel']:
                 checkout_date = datetime.strptime(
                         record.folio_id.checkout_date, DTF)
                 checkout_date = str_to_datetime(self._utc_to_lctime(
