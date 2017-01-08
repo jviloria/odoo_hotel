@@ -42,6 +42,14 @@ class RoomReservationSummary(models.Model):
 
     _inherit = 'room.reservation.summary'
 
+    @api.model
+    def default_get(self, fields):
+        if self._context is None:
+            self._context = {}
+        res = super(RoomReservationSummary, self).default_get(fields)
+        res.update({'date_from': datetime.today().strftime(DTF)})
+        return res
+
     def _lctime_to_utctime(self, strdate):
         if self._context is None:
             self._context = {}
@@ -144,12 +152,7 @@ class RoomReservationSummary(models.Model):
                                           self.date_from), DTF)
             d_to_obj = datetime.strptime(self._utc_to_lctime(
                                           self.date_to), DTF)
-            # d_frm_obj = (datetime.strptime
-            #              (self.date_from, DTF))
-            # d_to_obj = (datetime.strptime
-            #             (self.date_to, DTF))
             temp_date = d_frm_obj
-            _logger.critical('FROM DATE: %s'%d_frm_obj)
             while(temp_date <= d_to_obj):
                 val = ''
                 val = (str(temp_date.strftime("%a")) + ' ' +
@@ -204,6 +207,15 @@ class RoomReservationSummary(models.Model):
 
 class HotelSelectorWizard(models.TransientModel):
     _name = 'hotel.selector.wizard'
+
+    def _lctime_to_utctime(self, strdate):
+        if self._context is None:
+            self._context = {}
+        user_tz = pytz.timezone(self._context['tz']) if 'tz' in self._context \
+                                      else pytz.timezone('America/Bogota')
+        dt = datetime.strptime(strdate, DTF)
+        user_dt = user_tz.localize(dt, is_dst=None)
+        return user_dt.astimezone(pytz.utc).strftime(DTF) or False
 
     check_in = fields.Datetime('Date', required=True)
     room_id = fields.Many2one('hotel.room', 'Room', required=True)
@@ -281,7 +293,10 @@ class HotelSelectorWizard(models.TransientModel):
         if self._context:
             keys = self._context.keys()
             if 'date' in keys:
-                res.update({'check_in': self._context['date']})
+                date = self._lctime_to_utctime(self._context['date'])
+                date = (str_to_datetime(date) + \
+                        relativedelta(minutes=3)).strftime(DTF)
+                res.update({'check_in': date})
             if 'room_id' in keys:
                 roomid = self._context['room_id']
                 res.update({'room_id': int(roomid)})
