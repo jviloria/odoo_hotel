@@ -98,11 +98,11 @@ class RoomReservationSummary(models.Model):
         return False, False
 
     def get_occupied_room(self, room, date, room_info):
-        date_end = date[:10] + ' 23:00:00'
+        date_end = self._lctime_to_utctime(date[:10] + ' 15:00:00')
         date = self._lctime_to_utctime(date)
         records = self.env['hotel.folio.line'].search([
                                       ('checkin_date','<=',date),
-                                      ('checkout_date','>=',date)
+                                      ('checkout_date','>=',date_end)
                                      ])
         for record in records:
             if record.product_id.name == room.name:
