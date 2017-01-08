@@ -95,7 +95,8 @@ class RoomReservationSummary(models.Model):
         for record in records:
             if record.reservation_line:
                 for line in record.reservation_line:
-                    if room.name == line.name:
+                    if room.name == line.name and \
+                            record.state not in ['done','cancel']:
                         checkout_date = datetime.strptime(
                                         record.checkout, DTF)
                         checkout_date = str_to_datetime(self._utc_to_lctime(
