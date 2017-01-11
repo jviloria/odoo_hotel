@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="action_pos_session_xls" model="ir.actions.report.xml">
+      <field name="name">Export Selected Lines</field>
+      <field name="model">pos.session</field>
+      <field name="type">ir.actions.report.xml</field>
+      <field name="report_name">pos.session.xls</field>
+      <field name="report_type">xls</field>
+      <field name="auto" eval="False"/>
+    </record>
+
+    <record model="ir.values" id="action_pos_session_xls_values">
+      <field name="name">Export Selected Lines</field>
+      <field name="key2">client_action_multi</field>
+      <field name="value" eval="'ir.actions.report.xml,' +str(ref('action_pos_session_xls'))" />
+      <field name="model">pos.session</field>
+    </record>   
+    
+  </data>
+</openerp>

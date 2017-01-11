@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="report_product">
+			<t t-call="report.html_container">
+			    <t t-if="o and 'company_id' in o">
+        <t t-set="company" t-value="o.company_id"></t>
+    </t>
+    <t t-if="not o or not 'company_id' in o">
+        <t t-set="company" t-value="res_company"></t>
+    </t>
+    
+        <t t-if="not o or not 'company_id' in o">
+        <t t-set="products" t-value="products"></t>
+    </t>
+			
+				    <div class="page">
+				              <div class="row">
+            <div class="col-xs-3">
+                <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="height: 80px;"/>
+            </div>
+            <div class="col-xs-9 text-right" style="margin-top:20px;" t-field="company.rml_header1"/>
+        </div>
+        <div>
+            <div class="col-xs-12">
+                <div style="border-bottom: 1px solid black;"></div>
+            </div>
+        </div><br/>
+					<h2><center>CANTIDAD DE PRODUCTOS</center></h2>
+			
+					<br/>
+USUARIOS
+<t t-foreach="users" t-as="user">	
+<span t-esc="user[1]"/>
+</t>
+
+
+<h5><span t-esc="fecha"/></h5>
+			
+				
+					<h5>Cnt       Producto</h5>
+					<t t-foreach="products" t-as="item">	
+<h5><span t-esc="str(str(int(item['qty'])).zfill(4)+' ').ljust(6, ' ')"/>  <span t-esc="item['name']"/><span t-esc="item['description']"/></h5>
+			
+					</t>
+					
+			
+			                </div>
+				
+
+				
+			    
+			</t>
+		</template>
+	</data>
+</openerp>

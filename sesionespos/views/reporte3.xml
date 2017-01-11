@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="report_fecha">
+						<t t-call="report.html_container">
+			    <t t-if="o and 'company_id' in o">
+        <t t-set="company" t-value="o.company_id"></t>
+    </t>
+    <t t-if="not o or not 'company_id' in o">
+        <t t-set="company" t-value="res_company"></t>
+    </t>
+			
+			
+				    <div class="page">
+								              <div class="row">
+            <div class="col-xs-3">
+                <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="height: 80px;"/>
+            </div>
+            <div class="col-xs-9 text-right" style="margin-top:20px;" t-field="company.rml_header1"/>
+        </div>
+        <div>
+            <div class="col-xs-12">
+                <div style="border-bottom: 1px solid black;"></div>
+            </div>
+        </div><br/>
+					<h2><center>Horas de productos</center></h2>
+			
+					<br/>
+<t t-foreach="docs" t-as="o">	
+<span t-field="o.users"/>
+			
+					</t>
+
+<t t-foreach="docs" t-as="o">	
+<h5><span t-field="o.fechas"/></h5>
+			
+					</t>
+					
+	    				<t t-foreach="docs" t-as="o">	
+<h3><span t-field="o.hora_venta"/></h3>
+			
+					</t>
+			                </div>
+			    
+			</t>
+		</template>
+	</data>
+</openerp>
