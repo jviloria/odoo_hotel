@@ -123,3 +123,14 @@ class HotelFolio(models.Model):
             self.duration = myduration
             self.amount_untaxed = sum
             self.amount_total = self.amount_untaxed + self.amount_tax
+
+    @api.multi
+    def action_done(self):
+        self.write({'state': 'done'})
+        for line in self.room_lines:
+            room_name = line.product_id.name
+            room = self.env['hotel.room'].search([('name','=',room_name)])
+            if room:
+                room.status = 'available'
+
+
