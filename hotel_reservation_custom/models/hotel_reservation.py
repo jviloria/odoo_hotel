@@ -107,9 +107,7 @@ class HotelReservationLine(models.Model):
                              _('Before choosing a room,\n You have to select \
                              a Check in date or a Check out date in \
                              the reservation form.'))
-        _logger.critical('FECHA CHECKIN: %s'%self.line_id.checkin)
         for room in hotel_room_ids:
-            _logger.critical('ROOM NAME: %s'%room.name)
             assigned = False
             for line in room.room_reservation_line_ids:
                 if(line.check_in >= self.line_id.checkin and
@@ -119,6 +117,33 @@ class HotelReservationLine(models.Model):
                     assigned = True
             if not assigned:
                 room_ids.append(room.id)
-        _logger.critical('IDS: %s'%room_ids)
+
         domain = {'reserve': [('id', 'in', room_ids)]}
         return {'domain': domain}
+
+    @api.model
+    def create(self, vals):
+        _logger.critical('VALS: %s'%vals)
+        keys = vals.keys()
+        if 'reserve' in keys:
+            reserve = eval(vals['reserve']) if type(vals['reserve']) \
+                                        == 'str' else vals['reserve']
+            if len(reserve[0][2]) >= 2:
+                for room_id in reserve[0][2]:
+                    line = {}
+                    for key in keys:
+                        if key == 'reserve':
+                            line[key] = [(6,0,[room_id])]
+                        else:
+                            line[key] = vals[key]
+                    line['name'] = self.env['hotel.room'].search(
+                                    [('id','=',room_id)]).name
+                    reservation_line = super(HotelReservationLine, \
+                                            self).create(line)
+            else:
+                room_id = reserve[0][2]
+                vals['name'] = self.env['hotel.room'].search([('id','=',room_id)]).name
+                reservation_line = super(HotelReservationLine, self).create(vals)
+        for record in reservation_line:
+            _logger.critical('RESERVE: %s'%record.reserve)
+        return reservation_line
