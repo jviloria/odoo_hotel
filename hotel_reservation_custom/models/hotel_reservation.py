@@ -20,7 +20,9 @@
 ##############################################################################
 
 from openerp import api, models, fields
+import logging
 
+_logger= logging.getLogger(__name__)
 
 class HotelReservation(models.Model):
 
@@ -81,3 +83,42 @@ class HotelReservation(models.Model):
     room_number = fields.Char('Room No', compute='_get_room_lines')
     accompanist_ids = fields.One2many('hotel.guest.accompanist', 
         'reservation_id', 'Guest Accompanist')
+
+
+class HotelReservationLine(models.Model):
+
+    _inherit = "hotel_reservation.line"
+
+    @api.onchange('categ_id')
+    def on_change_categ(self):
+        '''
+        When you change categ_id it check checkin and checkout are
+        filled or not if not then raise warning
+        -----------------------------------------------------------
+        @param self: object pointer
+        '''
+        hotel_room_obj = self.env['hotel.room']
+        hotel_room_ids = hotel_room_obj.search([('categ_id', '=',
+                                                 self.categ_id.id)])
+        assigned = False
+        room_ids = []
+        if not self.line_id.checkin:
+            raise except_orm(_('Warning'),
+                             _('Before choosing a room,\n You have to select \
+                             a Check in date or a Check out date in \
+                             the reservation form.'))
+        _logger.critical('FECHA CHECKIN: %s'%self.line_id.checkin)
+        for room in hotel_room_ids:
+            _logger.critical('ROOM NAME: %s'%room.name)
+            assigned = False
+            for line in room.room_reservation_line_ids:
+                if(line.check_in >= self.line_id.checkin and
+                   line.check_in <= self.line_id.checkout or
+                   line.check_out <= self.line_id.checkout and
+                   line.check_out >= self.line_id.checkin):
+                    assigned = True
+            if not assigned:
+                room_ids.append(room.id)
+        _logger.critical('IDS: %s'%room_ids)
+        domain = {'reserve': [('id', 'in', room_ids)]}
+        return {'domain': domain}
