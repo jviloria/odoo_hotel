@@ -102,8 +102,9 @@ class RoomReservationSummary(models.Model):
                         checkout_date = str_to_datetime(self._utc_to_lctime(
                                         checkout_date.strftime(DTF)))\
                                         .strftime('%Y-%m-%d  %I:%M %p')
-                        room_info['tooltip_info'] = '%s\nCheckout: %s'%(
-                                    record.partner_id.name, checkout_date)
+                        room_info['tooltip_info'] = '%s\nCheckout: %s\n\
+                                    Reserva: %s'%(record.partner_id.name, 
+                                    checkout_date, record.reservation_no)
                         room_info['reservation'] = record.id
                         return state_dict[record.state], record.id
         return False, False
@@ -124,8 +125,9 @@ class RoomReservationSummary(models.Model):
                                 checkout_date.strftime(DTF)))\
                                 .strftime('%Y-%m-%d  %I:%M %p')
                 room_info['folio_id'] = record.folio_id.id
-                room_info['tooltip_info'] = '%s\nCheckout: %s'%(
-                            record.folio_id.partner_id.name, checkout_date)
+                room_info['tooltip_info'] = '%s\nCheckout: %s\n\
+                            Folio: %s'%(record.folio_id.partner_id.name, 
+                            checkout_date, record.folio_id.name)
                 return 'Occupied'
         return False
 
