@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--   pos.details -->
+
+        <record id="view_pos_details_inh" model="ir.ui.view">
+            <field name="name">POS Details</field>
+            <field name="model">pos.details</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_details"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group" position="before">
+                    <group col="4">
+                        <field name="grouped"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
