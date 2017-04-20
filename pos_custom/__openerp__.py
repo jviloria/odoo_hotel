@@ -33,6 +33,7 @@ Module for Pos customization.
     "data":[
         #"views/point_of_sale_view.xml",
         "views/pos_details.xml",
+        "views/report_detailsofsales.xml",
     ],
     "installable":True
  }
