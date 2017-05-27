@@ -30,7 +30,6 @@ class AccountInvoiceList(report_sxw.rml_parse):
         timestamp = datetime.datetime.strptime(form['date_end'], tools.DEFAULT_SERVER_DATETIME_FORMAT)
         timestamp = user_tz.localize(timestamp).astimezone(pytz.utc)
         date_end = timestamp.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-        #order_state = ['manual','progress'] if form['order_state'] == 'manual' else ['draft','sent']
 
         order_ids = sale_obj.search(self.cr, self.uid, [
             ('date_order', '>=', date_start),
@@ -93,18 +92,18 @@ class AccountInvoiceList(report_sxw.rml_parse):
         return self.product_list
 
     def _get_header(self, form):
-        orders = self._get_sale_orders(form)
-        header = ['Partner Name']
-        proccesed = []
-        for order in orders:
-            for line in order.order_line:
-                if line.product_id.id not in proccesed:
-                    header.append(line.name[:20])
-                    proccesed.append(line.product_id.id)
-        self.product_list = proccesed
-        self.orders = orders
-        self._sum_total_product_qty()
-        return header
+        #orders = self._get_sale_orders(form)
+        return ['Partner Name','Folio','Room Number','Cash','Credit Card']
+        # proccesed = []
+        # for order in orders:
+        #     for line in order.order_line:
+        #         if line.product_id.id not in proccesed:
+        #             header.append(line.name[:20])
+        #             proccesed.append(line.product_id.id)
+        # self.product_list = proccesed
+        # self.orders = orders
+        # self._sum_total_product_qty()
+        #return header
 
     def _compute_orders(self, form):
         orders = self._get_sale_orders(form)
@@ -143,15 +142,15 @@ class AccountInvoiceList(report_sxw.rml_parse):
         self.product_list = []
         self.orders = []
         self.localcontext.update({
-            'time': time,
-            'compute_orders': self._compute_orders,
+            #'time': time,
+            #'compute_orders': self._compute_orders,
             'get_header': self._get_header,
-            'sum_total_product_qty': self._sum_total_product_qty
+            #'sum_total_product_qty': self._sum_total_product_qty
         })
 
 
 class report_AccountInvoiceList(osv.AbstractModel):
-    _name = 'report.sale.report_sale_order_list'
+    _name = 'report.account.report_invoice_list'
     _inherit = 'report.abstract_report'
-    _template = 'sale.report_sale_order_list'
+    _template = 'account.report_invoice_list'
     _wrapped_report_class = AccountInvoiceList

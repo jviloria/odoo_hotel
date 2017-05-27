@@ -38,4 +38,4 @@ class accountWizard(osv.osv_memory):
         datas['form'] = res
         if res.get('id',False):
             datas['ids']=[res['id']]
-        #return self.pool['report'].get_action(cr, uid, [], 'sale.report_sale_order_list', data=datas, context=context)
+        return self.pool['report'].get_action(cr, uid, [], 'account.report_invoice_list', data=datas, context=context)
