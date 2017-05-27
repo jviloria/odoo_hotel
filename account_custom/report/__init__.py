@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    John W. Viloria Amaris <john.viloria.amaris@gmail.com>
+#	 John W. Viloria Amaris <john.viloria.amaris@gmail.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,20 +19,4 @@
 #
 ##############################################################################
 
-{
-    "name":"Account Invoice Report List",
-    "description":"""\
-Account Invoice Report List
-==================================
-
-Imprime una lista de los facturas pagadas para la fecha que se le indique mediante el uso de un filtro
-    """,
-    "depends":['report','account'],
-    "category":"Report",
-    "author":"John Viloria Amaris",
-    "data":[
-        "wizard/account_invoice_report_list.xml",
-        "views/report_account_invoice_list.xml",
-    ],
-    "installable":True
- }
+import account_invoice_report_list
