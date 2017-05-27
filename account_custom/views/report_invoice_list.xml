@@ -48,6 +48,15 @@
                                 <td>
                                    <span t-esc="o['folio']"/>
                                 </td>
+                                <td>
+                                   <span t-esc="o['room_number']"/>
+                                </td>
+                                <td>
+                                   <span t-esc="o['cash']"/>
+                                </td>
+                                <td>
+                                   <span t-esc="o['bank']"/>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

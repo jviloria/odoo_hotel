@@ -105,20 +105,34 @@ class AccountInvoiceList(report_sxw.rml_parse):
             folio = folio_obj.browse(self.cr, self.uid, folio_ids)[0]
         return folio
 
+    def _get_payments(self, inv):
+        payments = {}
+        for payment in inv.payment_ids:
+            try:
+                payments[unicode.capitalize(payment.journal_id.name)] += payment.amount
+            except:
+                payments[unicode.capitalize(payment.journal_id.name)] = payment.amount
+        cash = payments['Efectivo'] if 'Efectivo' in payments else 0.0
+        bank = payments['Tarjeta'] if 'Tarjeta' in payments else 0.0
+        return cash, bank
+
     def _compute_orders(self, form):
         invoices = self._get_account_invoices(form)
         inv_list = []
         for inv in invoices:
             folio_number = ''
             folio = self._get_folio(inv)
+            cash, bank = self._get_payments(inv)
             if folio:
                 folio_number = folio.name
                 data = {
                     'partner': inv.partner_id.name,
-                    'folio': folio_number,
+                    'folio': folio.name,
+                    'room_number': folio.room_number,
+                    'cash': cash,
+                    'bank': bank,
                 }
                 inv_list.append(data)
-        _logger.critical(inv_list)
         return inv_list
 
     # def _get_date_start(self, form):
