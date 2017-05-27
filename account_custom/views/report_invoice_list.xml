@@ -41,19 +41,14 @@
                             </tr>
                         </thead>
                         <tbody class="sale_tbody">
-                            <!--tr t-foreach="compute_orders(data['form'])" t-as="o">
+                            <tr t-foreach="compute_orders(data['form'])" t-as="o">
                                 <td>
-                                   <span t-esc="o['customer']"/>
+                                   <span t-esc="o['partner']"/>
                                 </td>
-                                <td t-foreach="o['product_ids']" t-as="p" class="text-center">
-                                   <span t-esc="p['qty']"/>
+                                <td>
+                                   <span t-esc="o['folio']"/>
                                 </td>
                             </tr>
-                            <tr>
-                                <th t-foreach="sum_total_product_qty()" t-as="f" class="text-center">
-                                    <span t-esc="f"/>
-                                </th>
-                            </tr-->
                         </tbody>
                     </table>
                 </div>
