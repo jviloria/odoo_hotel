@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <!--report
+        id="report_sale_order_list"
+        model="sale.order"
+        string="Lista de Pedidos X Fecha"
+        report_type="qweb-pdf"
+        name="sale.report_sale_order_list"
+        file="sale.report_sale_order_list"
+    /-->
+
+    <template id="sale.report_sale_order_list">
+        <t t-call="report.html_container">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+
+                    <div class="row">
+                        <div class="col-xs-12 text-right">
+                            Desde: <span t-esc="data['form']['date_start']"/><br/>
+                            Hasta: <span t-esc="data['form']['date_end']"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 text-center">
+                            <h3>
+                                <span >CUADRE DE CAJA</span>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th t-foreach="get_header(data['form'])" t-as="h" class="text-center">
+                                    <span t-esc="h"/>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="sale_tbody">
+                            <!--tr t-foreach="compute_orders(data['form'])" t-as="o">
+                                <td>
+                                   <span t-esc="o['customer']"/>
+                                </td>
+                                <td t-foreach="o['product_ids']" t-as="p" class="text-center">
+                                   <span t-esc="p['qty']"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th t-foreach="sum_total_product_qty()" t-as="f" class="text-center">
+                                    <span t-esc="f"/>
+                                </th>
+                            </tr-->
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</data>
+</openerp>
