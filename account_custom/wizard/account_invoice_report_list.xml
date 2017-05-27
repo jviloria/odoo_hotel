@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--   Wizard View -->
+
+        <record id="view_pos_details" model="ir.ui.view">
+            <field name="name">Account Invoice List</field>
+            <field name="model">account.invoice.list</field>
+            <field name="arch" type="xml">
+                <form string="POS Details">
+                    <group col="4" string="Dates">
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                    </group>
+                    <footer>
+                        <button name="print_report" type="object" string="Print Report" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_account_report_list" model="ir.actions.act_window">
+            <field name="name">Invoice Report List</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.invoice.list</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_account_report_list"
+                id="menu_account_report_list" parent="account.account_reports_business_intelligence_menu" sequence="30" />
+
+    </data>
+</openerp>
