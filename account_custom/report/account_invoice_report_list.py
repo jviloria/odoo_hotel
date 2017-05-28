@@ -109,11 +109,13 @@ class AccountInvoiceList(report_sxw.rml_parse):
         for payment in inv.payment_ids:
             try:
                 payments[unicode.capitalize(payment.journal_id.name)] += payment.amount
+                payments['receipts'] = payment.name
             except:
                 payments[unicode.capitalize(payment.journal_id.name)] = payment.amount
+                payments['receipts'] = payment.name
         cash = payments['Efectivo'] if 'Efectivo' in payments else 0.0
         bank = payments['Tarjeta'] if 'Tarjeta' in payments else 0.0
-        return cash, bank
+        return cash, bank, payments['receipts']
 
     def _compute_orders(self, form):
         invoices = self._get_account_invoices(form)
@@ -121,7 +123,7 @@ class AccountInvoiceList(report_sxw.rml_parse):
         for inv in invoices:
             folio_number = ''
             folio = self._get_folio(inv)
-            cash, bank = self._get_payments(inv)
+            cash, bank, receipt = self._get_payments(inv)
             if folio:
                 folio_number = folio.name
                 data = {
@@ -130,6 +132,7 @@ class AccountInvoiceList(report_sxw.rml_parse):
                     'room_number': folio.room_number,
                     'cash': cash,
                     'bank': bank,
+                    'receipt': receipt,
                 }
                 inv_list.append(data)
         return inv_list

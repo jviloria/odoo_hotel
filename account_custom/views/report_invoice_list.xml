@@ -57,6 +57,12 @@
                                 <td class="text-right">
                                    <span t-esc="formatLang(o['bank'])"/>
                                 </td>
+                                <td class="text-right">
+                                    0.0
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="o['receipt']"/>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
