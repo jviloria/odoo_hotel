@@ -12,8 +12,8 @@ class accountWizard(osv.osv_memory):
     _description = 'Invoices Report List'
 
     _columns = {
-        'date_start': fields.datetime('Date Start', required=True),
-        'date_end': fields.datetime('Date End', required=True),
+        'date_start': fields.date('Date Start', required=True),
+        'date_end': fields.date('Date End', required=True),
         'user_id': fields.many2one('res.users', string='User', required=True),
     }
     _defaults = {

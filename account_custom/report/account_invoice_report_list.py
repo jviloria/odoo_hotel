@@ -4,7 +4,7 @@
 import datetime
 import pytz
 import time
-from openerp import tools
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.osv import osv
 from openerp.report import report_sxw
 import logging
@@ -23,70 +23,23 @@ class AccountInvoiceList(report_sxw.rml_parse):
         tz_name = user.tz or self.localcontext.get('tz') or 'UTC'
         user_tz = pytz.timezone(tz_name)
         between_dates = {}
-        timestamp = datetime.datetime.strptime(form['date_start'], tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        timestamp = datetime.datetime.strptime(form['date_start'], DF)
         timestamp = user_tz.localize(timestamp).astimezone(pytz.utc)
-        date_start = timestamp.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-        timestamp = datetime.datetime.strptime(form['date_end'], tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        date_start = timestamp.strftime(DF)
+        timestamp = datetime.datetime.strptime(form['date_end'], DF)
         timestamp = user_tz.localize(timestamp).astimezone(pytz.utc)
-        date_end = timestamp.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        date_end = timestamp.strftime(DF)
         invoice_user = form['user_id'][0]
-        _logger.critical(invoice_user)
 
         inv_ids = inv_obj.search(self.cr, self.uid, [
             ('date_invoice', '>=', date_start),
-            ('date_invoice', '<', date_end),
+            ('date_invoice', '<=', date_end),
             ('state', 'in', ['paid']),
             ('company_id', '=', company_id),
             ('user_id', '=', invoice_user)
-        ])
+            ])
         invoices = inv_obj.browse(self.cr, self.uid, inv_ids)
         return invoices
-
-    # def _get_product_ids(self, orders):
-    #     product_ids = []
-    #     proccesed = []
-    #     for order in orders:
-    #         for line in order.order_line:
-    #             if line.product_id.id not in proccesed:
-    #                 product_ids.append({
-    #                     'id': line.product_id.id,
-    #                     'product_name': line.name,
-    #                     'qty': 0
-    #                 })
-    #                 proccesed.append(line.product_id.id)
-    #     return product_ids
-
-    # def _clear_product_ids(self, product_ids):
-    #     for product in product_ids:
-    #         product['qty'] = 0
-
-    # def _get_customers(self, orders):
-    #     customers = []
-    #     proccesed = []
-    #     for order in orders:
-    #         if order.partner_id.id not in proccesed:
-    #             customers.append((order.partner_id.id, order.partner_id.name))
-    #             proccesed.append(order.partner_id.id)
-    #     return customers
-
-    # def _sum_total_product_qty(self):
-    #     orders = self._get_orders()
-    #     footer = ['Total']
-    #     for product_id in self._get_product_list():
-    #         total_qty = 0
-    #         for order in orders:
-    #             for line in order.order_line:
-    #                 if line.product_id.id == product_id:
-    #                     total_qty += line.product_uom_qty
-    #         footer.append(total_qty)
-    #     self.total_product_qty = footer
-    #     return footer
-
-    # def _get_orders(self):
-    #     return self.orders
-
-    # def _get_product_list(self):
-    #     return self.product_list
 
     def _sum_total_payments(self):
         keys = []
@@ -169,9 +122,9 @@ class AccountInvoiceList(report_sxw.rml_parse):
     #     tz_name = user.tz or self.localcontext.get('tz') or 'UTC'
     #     user_tz = pytz.timezone(tz_name)
     #     between_dates = {}
-    #     timestamp = datetime.datetime.strptime(form['date_start'], tools.DEFAULT_SERVER_DATETIME_FORMAT)
+    #     timestamp = datetime.datetime.strptime(form['date_start'], DF)
     #     timestamp = user_tz.localize(timestamp).astimezone(pytz.utc)
-    #     date_start = timestamp.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+    #     date_start = timestamp.strftime(DF)
 
     def __init__(self, cr, uid, name, context):
         super(AccountInvoiceList, self).__init__(cr, uid, name, context=context)
