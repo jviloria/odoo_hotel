@@ -92,7 +92,7 @@ class AccountInvoiceList(report_sxw.rml_parse):
 
     def _get_header(self, form):
         return ['Partner Name','Folio','Room Number','Cash','Credit Card',
-            'Enterprise','Detail','Credit Card Brand']
+            'Enterprise','Receipt','Detail','Credit Card Brand']
 
     def _get_folio(self, inv):
         folio = False

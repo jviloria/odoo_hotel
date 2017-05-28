@@ -63,6 +63,12 @@
                                 <td class="text-right">
                                    <span t-esc="o['receipt']"/>
                                 </td>
+                                <td class="text-right">
+                                    ---
+                                </td>
+                                <td class="text-right">
+                                    ---
+                                </td>
                             </tr>
                         </tbody>
                     </table>
