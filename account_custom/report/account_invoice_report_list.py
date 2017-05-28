@@ -66,11 +66,6 @@ class AccountInvoiceList(report_sxw.rml_parse):
     #             proccesed.append(order.partner_id.id)
     #     return customers
 
-    # def _sum_product_qty(self, product_ids, line):
-    #     for product in product_ids:
-    #         if product['id'] == line.product_id.id:
-    #             product['qty'] += line.product_uom_qty
-
     # def _sum_total_product_qty(self):
     #     orders = self._get_orders()
     #     footer = ['Total']
@@ -89,6 +84,24 @@ class AccountInvoiceList(report_sxw.rml_parse):
 
     # def _get_product_list(self):
     #     return self.product_list
+
+    def _sum_total_payments(self):
+        keys = []
+        total = {}
+        for payment in self.payments:
+            for key in payment:
+                if not key in keys:
+                    try:
+                        value = float(payment[key])
+                        keys.append(key)
+                    except:
+                        pass
+        for key in keys:
+            total[key] = 0.0
+            for payment in self.payments:
+                if key in payment:
+                    total[key] += payment[key]
+        return [total]
 
     def _get_header(self, form):
         return ['Partner Name','Folio','Room Number','Cash','Credit Card',
@@ -115,6 +128,7 @@ class AccountInvoiceList(report_sxw.rml_parse):
                 payments['receipts'] = payment.name
         cash = payments['Efectivo'] if 'Efectivo' in payments else 0.0
         bank = payments['Tarjeta'] if 'Tarjeta' in payments else 0.0
+        self.payments.append(payments)
         return cash, bank, payments['receipts']
 
     def _compute_orders(self, form):
@@ -152,15 +166,12 @@ class AccountInvoiceList(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
         super(AccountInvoiceList, self).__init__(cr, uid, name, context=context)
-        self.total_product_qty = 0.0
-        self.qty = 0.0
-        self.product_list = []
-        self.orders = []
+        self.payments = []
         self.localcontext.update({
             #'time': time,
             'compute_orders': self._compute_orders,
             'get_header': self._get_header,
-            #'sum_total_product_qty': self._sum_total_product_qty
+            'sum_total_payments': self._sum_total_payments,
         })
 
 

@@ -70,6 +70,19 @@
                                     ---
                                 </td>
                             </tr>
+                            <tr>
+                                <t t-foreach="sum_total_payments()" t-as="p">
+                                    <th/>
+                                    <th/>
+                                    <th/>
+                                    <th class="text-center">
+                                        <span t-esc="formatLang(p['Efectivo'])"/>
+                                    </th>
+                                    <th class="text-center">
+                                        <span t-esc="formatLang(p['Tarjeta'])"/>
+                                    </th>
+                                </t>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
