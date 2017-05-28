@@ -75,11 +75,14 @@
                                     <th/>
                                     <th/>
                                     <th/>
-                                    <th class="text-center">
+                                    <th class="text-right">
                                         <span t-esc="formatLang(p['Efectivo'])"/>
                                     </th>
-                                    <th class="text-center">
+                                    <th class="text-right">
                                         <span t-esc="formatLang(p['Tarjeta'])"/>
+                                    </th>
+                                    <th class="text-right">
+                                        <span t-esc="formatLang(0.0)"/>
                                     </th>
                                 </t>
                             </tr>

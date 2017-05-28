@@ -117,7 +117,7 @@ class AccountInvoiceList(report_sxw.rml_parse):
             folio = folio_obj.browse(self.cr, self.uid, folio_ids)[0]
         return folio
 
-    def _get_payments(self, inv):
+    def _get_payments(self, inv):   #Just for one invoice
         payments = {}
         for payment in inv.payment_ids:
             try:
@@ -135,11 +135,9 @@ class AccountInvoiceList(report_sxw.rml_parse):
         invoices = self._get_account_invoices(form)
         inv_list = []
         for inv in invoices:
-            folio_number = ''
             folio = self._get_folio(inv)
-            cash, bank, receipt = self._get_payments(inv)
             if folio:
-                folio_number = folio.name
+                cash, bank, receipt = self._get_payments(inv)
                 data = {
                     'partner': inv.partner_id.name,
                     'folio': folio.name,
@@ -147,7 +145,7 @@ class AccountInvoiceList(report_sxw.rml_parse):
                     'cash': cash,
                     'bank': bank,
                     'receipt': receipt,
-                }
+                    }
                 inv_list.append(data)
         return inv_list
 
