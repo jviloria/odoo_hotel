@@ -29,12 +29,15 @@ class AccountInvoiceList(report_sxw.rml_parse):
         timestamp = datetime.datetime.strptime(form['date_end'], tools.DEFAULT_SERVER_DATETIME_FORMAT)
         timestamp = user_tz.localize(timestamp).astimezone(pytz.utc)
         date_end = timestamp.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        invoice_user = form['user_id'][0]
+        _logger.critical(invoice_user)
 
         inv_ids = inv_obj.search(self.cr, self.uid, [
             ('date_invoice', '>=', date_start),
             ('date_invoice', '<', date_end),
             ('state', 'in', ['paid']),
-            ('company_id', '=', company_id)
+            ('company_id', '=', company_id),
+            ('user_id', '=', invoice_user)
         ])
         invoices = inv_obj.browse(self.cr, self.uid, inv_ids)
         return invoices
@@ -96,6 +99,8 @@ class AccountInvoiceList(report_sxw.rml_parse):
                         keys.append(key)
                     except:
                         pass
+        total['Tarjeta'] = 0.0
+        total['Efectivo'] = 0.0
         for key in keys:
             total[key] = 0.0
             for payment in self.payments:
@@ -131,6 +136,12 @@ class AccountInvoiceList(report_sxw.rml_parse):
         self.payments.append(payments)
         return cash, bank, payments['receipts']
 
+    def _get_cashier_name(self, form):
+        return unicode.capitalize(form['user_id'][1])
+
+    def _get_cashier_id(self, form):
+        return form['user_id'][0]
+
     def _compute_orders(self, form):
         invoices = self._get_account_invoices(form)
         inv_list = []
@@ -165,11 +176,14 @@ class AccountInvoiceList(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(AccountInvoiceList, self).__init__(cr, uid, name, context=context)
         self.payments = []
+        self.cashier = False
         self.localcontext.update({
             #'time': time,
             'compute_orders': self._compute_orders,
             'get_header': self._get_header,
             'sum_total_payments': self._sum_total_payments,
+            'get_cashier_id': self._get_cashier_id,
+            'get_cashier_name': self._get_cashier_name,
         })
 
 

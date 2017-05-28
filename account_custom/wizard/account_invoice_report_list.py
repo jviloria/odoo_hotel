@@ -14,6 +14,7 @@ class accountWizard(osv.osv_memory):
     _columns = {
         'date_start': fields.datetime('Date Start', required=True),
         'date_end': fields.datetime('Date End', required=True),
+        'user_id': fields.many2one('res.users', string='User', required=True),
     }
     _defaults = {
         'date_start': fields.datetime.now,
@@ -33,7 +34,7 @@ class accountWizard(osv.osv_memory):
         if context is None:
             context = {}
         datas = {'ids': context.get('active_ids', [])}
-        res = self.read(cr, uid, ids, ['date_start', 'date_end'], context=context)
+        res = self.read(cr, uid, ids, ['date_start', 'date_end', 'user_id'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
         if res.get('id',False):

@@ -19,16 +19,19 @@
                     <div class="oe_structure"/>
 
                     <div class="row">
-                        <div class="col-xs-12 text-right">
-                            Desde: <span t-esc="data['form']['date_start']"/><br/>
-                            Hasta: <span t-esc="data['form']['date_end']"/>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-xs-12 text-center">
                             <h3>
                                 <span >CUADRE DE CAJA</span>
                             </h3>
+                        </div>
+                    </div>
+                    <div class="row mt16 mb16">
+                        <div class="col-xs-6">
+                            <span>Cashier: <span t-esc="get_cashier_name(data['form'])"/></span>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            Desde: <span t-esc="data['form']['date_start']"/><br/>
+                            Hasta: <span t-esc="data['form']['date_end']"/>
                         </div>
                     </div>
 
@@ -79,7 +82,9 @@
                                         <span t-esc="formatLang(p['Efectivo'])"/>
                                     </th>
                                     <th class="text-right">
-                                        <span t-esc="formatLang(p['Tarjeta'])"/>
+                                        <span t-if="p['Tarjeta']">
+                                            <span t-esc="formatLang(p['Tarjeta'])"/>
+                                        </span>
                                     </th>
                                     <th class="text-right">
                                         <span t-esc="formatLang(0.0)"/>

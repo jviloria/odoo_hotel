@@ -11,6 +11,7 @@
                     <group col="4" string="Dates">
                         <field name="date_start"/>
                         <field name="date_end"/>
+                        <field name="user_id" widget="selection"/>
                     </group>
                     <footer>
                         <button name="print_report" type="object" string="Print Report" class="btn-primary"/>
