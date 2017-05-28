@@ -51,11 +51,11 @@
                                 <td>
                                    <span t-esc="o['room_number']"/>
                                 </td>
-                                <td>
-                                   <span t-esc="o['cash']"/>
+                                <td class="text-right">
+                                   <span t-esc="formatLang(o['cash'])"/>
                                 </td>
-                                <td>
-                                   <span t-esc="o['bank']"/>
+                                <td class="text-right">
+                                   <span t-esc="formatLang(o['bank'])"/>
                                 </td>
                             </tr>
                         </tbody>

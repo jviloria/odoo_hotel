@@ -7,7 +7,6 @@ import time
 from openerp import tools
 from openerp.osv import osv
 from openerp.report import report_sxw
-from copy import deepcopy
 import logging
 
 _logger = logging.getLogger(__name__)
