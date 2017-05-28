@@ -23,6 +23,7 @@
                             <h3>
                                 <span >CUADRE DE CAJA</span>
                             </h3>
+                            Fecha: <span t-esc="get_current_datetime()"/>
                         </div>
                     </div>
                     <div class="row mt16 mb16">

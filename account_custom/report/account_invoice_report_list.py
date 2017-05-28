@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
+from datetime import datetime
 import pytz
 import time
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF, \
+    DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from openerp.osv import osv
 from openerp.report import report_sxw
 import logging
@@ -23,10 +24,10 @@ class AccountInvoiceList(report_sxw.rml_parse):
         tz_name = user.tz or self.localcontext.get('tz') or 'UTC'
         user_tz = pytz.timezone(tz_name)
         between_dates = {}
-        timestamp = datetime.datetime.strptime(form['date_start'], DF)
+        timestamp = datetime.strptime(form['date_start'], DF)
         timestamp = user_tz.localize(timestamp).astimezone(pytz.utc)
         date_start = timestamp.strftime(DF)
-        timestamp = datetime.datetime.strptime(form['date_end'], DF)
+        timestamp = datetime.strptime(form['date_end'], DF)
         timestamp = user_tz.localize(timestamp).astimezone(pytz.utc)
         date_end = timestamp.strftime(DF)
         invoice_user = form['user_id'][0]
@@ -95,6 +96,14 @@ class AccountInvoiceList(report_sxw.rml_parse):
     def _get_cashier_id(self, form):
         return form['user_id'][0]
 
+    def _get_current_datetime(self):
+        now = datetime.now(pytz.timezone('UTC'))
+        user = self.pool['res.users'].browse(self.cr, self.uid, self.uid)
+        tz_name = user.tz or self.localcontext.get('tz') or 'UTC'
+        user_tz = pytz.timezone(tz_name)
+        now = now.astimezone(user_tz)
+        return now.strftime(DTF)
+
     def _compute_orders(self, form):
         invoices = self._get_account_invoices(form)
         inv_list = []
@@ -113,19 +122,6 @@ class AccountInvoiceList(report_sxw.rml_parse):
                 inv_list.append(data)
         return inv_list
 
-    # def _get_date_start(self, form):
-    #     user_obj = self.pool.get('res.users')
-    #     data = []
-    #     result = {}
-    #     company_id = user_obj.browse(self.cr, self.uid, self.uid).company_id.id
-    #     user = self.pool['res.users'].browse(self.cr, self.uid, self.uid)
-    #     tz_name = user.tz or self.localcontext.get('tz') or 'UTC'
-    #     user_tz = pytz.timezone(tz_name)
-    #     between_dates = {}
-    #     timestamp = datetime.datetime.strptime(form['date_start'], DF)
-    #     timestamp = user_tz.localize(timestamp).astimezone(pytz.utc)
-    #     date_start = timestamp.strftime(DF)
-
     def __init__(self, cr, uid, name, context):
         super(AccountInvoiceList, self).__init__(cr, uid, name, context=context)
         self.payments = []
@@ -137,6 +133,7 @@ class AccountInvoiceList(report_sxw.rml_parse):
             'sum_total_payments': self._sum_total_payments,
             'get_cashier_id': self._get_cashier_id,
             'get_cashier_name': self._get_cashier_name,
+            'get_current_datetime': self._get_current_datetime,
         })
 
 
