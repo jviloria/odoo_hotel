@@ -32,7 +32,7 @@ Imprime una lista de los facturas pagadas para la fecha que se le indique median
     "author":"John Viloria Amaris",
     "data":[
         "wizard/account_invoice_report_list.xml",
-        "views/report_invoice_list.xml",
+        #"views/report_invoice_list.xml",
     ],
     "installable":True
  }
