@@ -12,17 +12,12 @@ class accountWizard(models.TransientModel):
     _description = 'Invoices Report List'
 
 
-    date_start = fields.Date('Date Start', required=True)
-    date_end = fields.Date('Date End', required=True)
+    date_start = fields.Date('Date Start', required=True, default=fields.Datetime.now)
+    date_end = fields.Date('Date End', required=True, default=fields.Datetime.now)
     user_id = fields.Many2one('res.users', string='User', required=True)
 
-    # _defaults = {
-    #     'date_start': fields.datetime.now,
-    #     'date_end': fields.datetime.now,
-    # }
-
     @api.multi
-    def print_report(self):
+    def print_report(self, datas=None):
         _logger.critical('REPORT INVOICE PRINTING')
         """
          To get the date and print the report
@@ -36,17 +31,9 @@ class accountWizard(models.TransientModel):
             self._context = {}
         datas = {'ids': self._context.get('active_ids', [])}
         res = self.search_read([], ['date_start', 'date_end', 'user_id'])
-        _logger.critical('*********** %s **********'%res)
-        # res = res and res[0] or {}
-        # datas['form'] = res
-        # if res.get('id',False):
-        #     datas['ids']=[res['id']]
-        # return {
-        #         'type' : 'ir.actions.report',
-        #         'report_name': 'report_template_id'
-        #         'datas': {
-        #             'ids': [ self.id ],
-        #             'model': 'your_addon.your_model'
-        #             }
-        # }
-        # return self.pool['report'].get_action(cr, uid, [], 'account.report_invoice_list', data=datas, context=context)
+        res = res and res[0] or {}
+        datas['form'] = res
+        if res.get('id',False):
+            datas['ids']=[res['id']]
+        _logger.critical('HASTA ACA MONOCUCO')
+        return self.env['report'].get_action(self, 'account.report_invoice_list', data=datas)

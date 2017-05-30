@@ -12,7 +12,8 @@
         menu="False"
     />
 
-    <template id="account.report_invoice_list_document">
+    <template id="account.report_invoice_list">
+        <t t-call="report.html_container">
             <t t-call="report.external_layout">
                 <div class="page">
                     <div class="oe_structure"/>
@@ -27,7 +28,7 @@
                     </div>
                     <div class="row mt16 mb16">
                         <div class="col-xs-6">
-                            <span>Cashier: <span t-esc="get_cashier_name(data['form'])"/></span>
+                            <!--span>Cashier: <span t-esc="get_cashier_name(data['form'])"/></span-->
                         </div>
                         <div class="col-xs-6 text-right">
                             Desde: <span t-esc="data['form']['date_start']"/><br/>
@@ -35,7 +36,7 @@
                         </div>
                     </div>
 
-                    <table class="table table-condensed">
+                    <!--table class="table table-condensed">
                         <thead>
                             <tr>
                                 <th t-foreach="get_header(data['form'])" t-as="h" class="text-center">
@@ -67,10 +68,10 @@
                                    <span t-esc="o['receipt']"/>
                                 </td>
                                 <td class="text-right">
-                                    ---
+
                                 </td>
                                 <td class="text-right">
-                                    ---
+
                                 </td>
                             </tr>
                             <tr>
@@ -92,18 +93,19 @@
                                 </t>
                             </tr>
                         </tbody>
-                    </table>
+                    </table-->
                 </div>
             </t>
+        </t>
     </template>
 
-    <template id="account.report_invoice_list">
+    <!--template id="account.report_invoice_list">
         <t t-call="report.html_container">
             <t t-foreach="doc_ids" t-as="doc_id">
                 <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'account.report_invoice_list_document')"/>
             </t>
         </t>
-    </template>
+    </template-->
 
 </data>
 </openerp>
