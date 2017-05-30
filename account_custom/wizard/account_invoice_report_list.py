@@ -35,5 +35,4 @@ class accountWizard(models.TransientModel):
         datas['form'] = res
         if res.get('id',False):
             datas['ids']=[res['id']]
-        _logger.critical('HASTA ACA MONOCUCO')
         return self.env['report'].get_action(self, 'account.report_invoice_list', data=datas)
