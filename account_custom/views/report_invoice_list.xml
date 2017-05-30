@@ -12,8 +12,9 @@
         menu="False"
     />
 
-    <template id="account.report_invoice_list">
-        <t t-call="report.html_container">
+    <template id="account.report_invoice_list_document">
+        <!--t t-call="report.html_container"-->
+            <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
             <t t-call="report.external_layout">
                 <div class="page">
                     <div class="oe_structure"/>
@@ -28,7 +29,7 @@
                     </div>
                     <div class="row mt16 mb16">
                         <div class="col-xs-6">
-                            <span>Cashier: <span t-esc="get_cashier_name(data['form'])"/></span>
+                            <span>Cajero: <span t-esc="get_cashier_name(data['form'])"/></span>
                         </div>
                         <div class="col-xs-6 text-right">
                             Desde: <span t-esc="data['form']['date_start']"/><br/>
@@ -96,16 +97,16 @@
                     </table>
                 </div>
             </t>
-        </t>
+        <!--/t-->
     </template>
 
-    <!--template id="account.report_invoice_list">
+    <template id="account.report_invoice_list">
         <t t-call="report.html_container">
-            <t t-foreach="doc_ids" t-as="doc_id">
-                <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'account.report_invoice_list_document')"/>
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="account.report_invoice_list_document" t-lang="doc.partner_id.lang"/>
             </t>
         </t>
-    </template-->
+    </template>
 
 </data>
 </openerp>

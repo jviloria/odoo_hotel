@@ -6,13 +6,12 @@ import pytz
 from openerp import api, models
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF, \
     DEFAULT_SERVER_DATETIME_FORMAT as DTF
-from openerp.tools.misc import formatLang
-import openerp.addons.decimal_precision as dp
+
 import logging
 
 _logger = logging.getLogger(__name__)
 
-class ParticularReport(models.AbstractModel):
+class PaidInvoiceReport(models.AbstractModel):
     _name = 'report.account.report_invoice_list'
 
     def _formatlang(self, value):
@@ -57,8 +56,8 @@ class ParticularReport(models.AbstractModel):
         return unicode.capitalize(form['user_id'][1])
 
     def _get_header(self, form):
-        return ['Partner Name','Folio','Room Number','Cash','Credit Card',
-            'Enterprise','Receipt','Detail','Credit Card Brand']
+        return ['Nombre','Folio','Hab','Efectivo',u'Tarj. Crédito',
+            'Empresa','Recibo','Detalle','Tipo Tarj']
 
     def _get_folio(self, inv):
         folio = False
@@ -125,20 +124,19 @@ class ParticularReport(models.AbstractModel):
     @api.multi
     def render_html(self, data=None):
         self.payments = []
-        _logger.critical(self._ids)
+        self.invoices = self._get_account_invoices(data['form'])
+        inv_ids = [inv.id for inv in self.invoices]
         report_obj = self.env['report']
         report = report_obj._get_report_from_name('account.report_invoice_list')
         docargs = {
-            'doc_ids': self._ids,
+            'doc_ids': inv_ids[0],
             'doc_model': report.model,
-            'docs': self,
+            'docs': self.invoices[0],
             'data': data,
             'get_current_datetime': self._get_current_datetime,
             'get_cashier_name': self._get_cashier_name,
             'get_header': self._get_header,
             'compute_orders': self._compute_orders,
-            'formatLang': self._formatlang,
-            'dp': dp,
             'sum_total_payments': self._sum_total_payments,
         }
         return report_obj.render('account.report_invoice_list', docargs)
